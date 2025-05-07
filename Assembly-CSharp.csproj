@@ -140,18 +140,8 @@
     <Compile Include="Assets/JANOARG/Scripts/Behaviors/Common/AudioManager.cs" />
     <Compile Include="Assets/JANOARG.Shared/Script/Data/ChartInfo/Easing.cs" />
     <Compile Include="Assets/JANOARG.Shared/Script/Data/ChartInfo/BeatPosition.cs" />
-<<<<<<< HEAD
-<<<<<<< HEAD
     <Compile Include="Assets/JANOARG/Scripts/UI/GraphicCircle.cs" />
     <Compile Include="Assets/JANOARG.Shared/Script/Data/Files/StoryDecoder.cs" />
-=======
-    <Compile Include="Assets/JANOARG.Shared/Script/Data/Files/StoryDecoder.cs" />
-    <Compile Include="Assets/JANOARG/Scripts/UI/GraphicCircle.cs" />
->>>>>>> 24886b7 (rearrange things 2)
-=======
-    <Compile Include="Assets/JANOARG/Scripts/UI/GraphicCircle.cs" />
-    <Compile Include="Assets/JANOARG.Shared/Script/Data/Files/StoryDecoder.cs" />
->>>>>>> 38c355c (Commit that does too many things)
     <Compile Include="Assets/JANOARG/Scripts/Behaviors/Common/StorageManager.cs" />
     <Compile Include="Assets/JANOARG/Scripts/UI/SafeAreaManager.cs" />
     <Compile Include="Assets/JANOARG.Shared/Script/Data/Files/JACDecoder.cs" />
