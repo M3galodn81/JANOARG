@@ -119,7 +119,10 @@ public class ProfileBar : MonoBehaviour
     {
         // Name
         NameLabel.text = Common.main.Storage.Get("INFO:Name", "JANOARG");
-        
+
+        // Title
+        TitleLabel.text = Common.main.Storage.Get("INFO:Title", "Perfectly Generic Player");
+
         // Levels
         int level = Common.main.Storage.Get("INFO:Level", 1);
         LevelText.text = level.ToString();
