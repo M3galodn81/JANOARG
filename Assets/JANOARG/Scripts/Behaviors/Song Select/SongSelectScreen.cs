@@ -700,8 +700,9 @@ public class SongSelectScreen : MonoBehaviour
             yield break;
         }
 
-        string songPath = Playlist.ItemPaths[SongList.IndexOf(TargetSong.Song)];
-        string fullPath = Path.Combine(Application.streamingAssetsPath, "Resources", songPath); // or adjust if needed
+        string originalPath = Playlist.ItemPaths[SongList.IndexOf(TargetSong.Song)];
+        string songPath = Path.GetDirectoryName(originalPath) + Path.DirectorySeparatorChar;
+        string fullPath = Path.Combine(Application.dataPath, "JANOARG/Resources", songPath); // or adjust if needed
 
         try
         {
@@ -718,7 +719,7 @@ public class SongSelectScreen : MonoBehaviour
             // Remove from data
             SongList.Remove(TargetSong.Song);
             ItemList.Remove(TargetSong);
-            Playlist.ItemPaths.Remove(songPath);
+            Playlist.ItemPaths.Remove(originalPath);
             Destroy(TargetSong.gameObject);
 
             // Reload playlist visuals
