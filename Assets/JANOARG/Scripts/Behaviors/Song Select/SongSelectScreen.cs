@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using System;
 using Random = UnityEngine.Random;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
 public class SongSelectScreen : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class SongSelectScreen : MonoBehaviour
     [Space]
     public CanvasGroup LeftActionsHolder;
     public CanvasGroup RightActionsHolder;
+    [Space]
+    public CanvasGroup DeletePopupHolder;
     [Space]
     public CanvasGroup LaunchTextHolder;
     public TMP_Text LaunchText;
@@ -675,6 +678,8 @@ public class SongSelectScreen : MonoBehaviour
 
     public void Delete()
     {
+        int TrackNumber = Playlist.ItemPaths.Count;
+        if (TrackNumber - 1 <= 0) { return; }
         if (TargetSongAnim != null) StopCoroutine(TargetSongAnim);
         StartCoroutine(DeleteAnim());
     }
@@ -729,7 +734,7 @@ public class SongSelectScreen : MonoBehaviour
             ItemList.Clear();
 
             StartCoroutine(InitPlaylist()); // Reload visuals
-
+            HideDeletePopup();
             //Then scroll up or down 
 
         }
@@ -740,6 +745,7 @@ public class SongSelectScreen : MonoBehaviour
 
         // LoadingBar.main.Hide();
         IsAnimating = false;
+        
     }
 
 
@@ -748,10 +754,22 @@ public class SongSelectScreen : MonoBehaviour
 
     #region Info Messages
     //TODO: Popup to show it works/ or not
-    // public void InfoPopup()
-    // {
+    public void ShowDeletePopup()
+    {
+        DeletePopupHolder.transform.SetAsLastSibling();
+        DeletePopupHolder.gameObject.SetActive(true);
+        DeletePopupHolder.alpha = 1f;                  // Make visible
+        DeletePopupHolder.interactable = true;         // Allow interaction
+        DeletePopupHolder.blocksRaycasts = true;       // Allow clicks
+    }
 
-    // }
+    public void HideDeletePopup()
+    {
+        DeletePopupHolder.alpha = 0f;                  // Hide visually
+        DeletePopupHolder.interactable = false;        // Disable interaction
+        DeletePopupHolder.blocksRaycasts = false;      // Ignore clicks
+        DeletePopupHolder.gameObject.SetActive(false);
+    }
 
 
     #endregion
