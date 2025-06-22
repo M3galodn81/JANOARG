@@ -87,6 +87,7 @@ public class SongSelectScreen : MonoBehaviour
 
     [NonSerialized] public Cover CurrentCover;
 
+    #region Default Unity Functions 
     public void Awake()
     {
         main = this;
@@ -215,7 +216,9 @@ public class SongSelectScreen : MonoBehaviour
         }
         
     }
-
+    #endregion
+    
+    #region SongItem
     public IEnumerator InitPlaylist()
     {
         int index = 0;
@@ -224,7 +227,7 @@ public class SongSelectScreen : MonoBehaviour
         {
             ResourceRequest req = Resources.LoadAsync<ExternalPlayableSong>(path);
             yield return new WaitUntil(() => req.isDone);
-            if (!req.asset) 
+            if (!req.asset)
             {
                 Debug.LogWarning("Couldn't load Playable Song at " + path);
                 continue;
@@ -237,10 +240,10 @@ public class SongSelectScreen : MonoBehaviour
             ItemList.Add(item);
             index++;
             pos += 48;
-            
+
         }
         IsInit = true;
-        
+
         if (!LoadingBar.main.gameObject.activeSelf) Intro();
     }
 
@@ -410,7 +413,9 @@ public class SongSelectScreen : MonoBehaviour
 
         TargetSongAnim = null;
     }
+    #endregion
 
+    #region Difficulty
     public ExternalChartMeta GetNearestDifficulty(List<ExternalChartMeta> charts)
     {
         int dist = int.MaxValue;
@@ -491,7 +496,9 @@ public class SongSelectScreen : MonoBehaviour
         TargetDifficultyScore.text = Helper.PadScore((target.Record?.Score ?? 0).ToString("#0"))
             + "<size=60%><b>ppm";
     }
+    #endregion
 
+    #region Cover
     float coverLerp = 0;
     public void LerpCover(float a) 
     {
@@ -541,8 +548,10 @@ public class SongSelectScreen : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    public void Launch() 
+    #region Launching Animation
+    public void Launch()
     {
         if (TargetSongAnim != null) StopCoroutine(TargetSongAnim);
         StartCoroutine(LaunchAnim());
@@ -619,7 +628,9 @@ public class SongSelectScreen : MonoBehaviour
         rt(DifficultyHolder).anchoredPosition = new (10 * (1 - a), rt(DifficultyHolder).anchoredPosition.y);
         if (!QuickMenu.main || !QuickMenu.main.gameObject.activeSelf) ProfileBar.main.SetVisibilty(a);
     }
+    #endregion
 
+    #region Intro
     public void Intro()
     {
         if (!IsAnimating) StartCoroutine(IntroAnim());
@@ -647,6 +658,104 @@ public class SongSelectScreen : MonoBehaviour
 
         IsAnimating = false;
     }
+    #endregion
+
+    #region Import
+    //TODO: Access phone storage
+    //TODO: Check if it is a zip file
+    //TODO: Update Songlist
+    //TODO: Reload if success
+
+    #endregion
+
+    #region Delete
+    //TODO: Delete folder
+    //TODO: Check number of songs before deleting
+    //TODO: Update Songlist
+
+    public void Delete()
+    {
+        if (TargetSongAnim != null) StopCoroutine(TargetSongAnim);
+        StartCoroutine(DeleteAnim());
+    }
+
+    public IEnumerator DeleteAnim()
+    {
+        IsAnimating = true;
+        // LoadingBar.main.Show();
+
+        // Find selected song
+        SongSelectItem TargetSong = ItemList.Find(item => TargetScrollOffset == item.Position);
+        IsTargetSongHidden = true;
+        TargetSongHideAnim();
+        if (TargetSong == null)
+        {
+            Debug.LogWarning("No song selected to delete.");
+            IsAnimating = false;
+            yield break;
+        }
+
+        string songPath = Playlist.ItemPaths[SongList.IndexOf(TargetSong.Song)];
+        string fullPath = Path.Combine(Application.streamingAssetsPath, "Resources", songPath); // or adjust if needed
+
+        try
+        {
+            if (Directory.Exists(fullPath))
+            {
+                Directory.Delete(fullPath, true); // Delete the entire song folder
+                Debug.Log("Deleted: " + fullPath);
+            }
+            else
+            {
+                Debug.LogWarning("Song folder not found: " + fullPath);
+            }
+
+            // Remove from data
+            SongList.Remove(TargetSong.Song);
+            ItemList.Remove(TargetSong);
+            Playlist.ItemPaths.Remove(songPath);
+            Destroy(TargetSong.gameObject);
+
+            // Reload playlist visuals
+            ScrollOffset = 0;
+            TargetScrollOffset = 0;
+            TargetSongOffset = 0;
+            IsReady = false;
+
+            foreach (var item in ItemList)
+            {
+                Destroy(item.gameObject);
+            }
+            ItemList.Clear();
+
+            StartCoroutine(InitPlaylist()); // Reload visuals
+
+            //Then scroll up or down 
+
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Failed to delete song: " + ex.Message);
+        }
+
+        // LoadingBar.main.Hide();
+        IsAnimating = false;
+    }
+
+
+
+    #endregion
+
+    #region Info Messages
+    //TODO: Popup to show it works/ or not
+    // public void InfoPopup()
+    // {
+
+    // }
+
+
+    #endregion
+
 
     RectTransform rt (Component obj) => obj.transform as RectTransform;
 }
