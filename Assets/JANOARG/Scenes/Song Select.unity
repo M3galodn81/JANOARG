@@ -2701,7 +2701,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1562277643}
         m_TargetAssemblyTypeName: SongSelectScreen, Assembly-CSharp
-        m_MethodName: Launch
+        m_MethodName: ImportSongZip
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6626,7 +6626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c35667dc285e4aa40a039b2a37a9ec08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Playlist: {fileID: 11400000, guid: 5369a124ba3e8540081a128466e3ae72, type: 2}
+  Playlist: {fileID: 11400000, guid: e83e8b9ab42a5f75ea460200570adc05, type: 2}
   ItemSample: {fileID: 1567076798739812424, guid: 70ce51dbf68132e49a34eb0db328beb2, type: 3}
   ItemHolder: {fileID: 879351028}
   ItemGroup: {fileID: 879351032}

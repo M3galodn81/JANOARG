@@ -4,12 +4,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.IO;
+using System.IO.Compression;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using System;
 using Random = UnityEngine.Random;
 using Unity.VisualScripting;
 using UnityEngine.Rendering;
+using NativeFilePickerNamespace;
 
 public class SongSelectScreen : MonoBehaviour
 {
@@ -669,6 +671,80 @@ public class SongSelectScreen : MonoBehaviour
     //TODO: Update Songlist
     //TODO: Reload if success
 
+    public void ImportSongZip()
+    {
+        NativeFilePicker.PickFile((path) =>
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                Debug.Log("No file selected.");
+                return;
+            }
+
+            if (!path.EndsWith(".zip"))
+            {
+                Debug.LogWarning("File is not a .zip!");
+                return;
+            }
+
+            string importRoot = Path.Combine(Application.persistentDataPath, "Songs");
+            if (!Directory.Exists(importRoot))
+                Directory.CreateDirectory(importRoot);
+
+            string folderName = Path.GetFileNameWithoutExtension(path);
+            string extractPath = Path.Combine(importRoot, folderName);
+
+            try
+            {
+                if (Directory.Exists(extractPath))
+                    Directory.Delete(extractPath, true); // clear old version
+
+                ZipFile.ExtractToDirectory(path, extractPath);
+                Debug.Log("Extracted to: " + extractPath);
+
+                // Check required files
+                bool hasSong = false, hasJaps = false, hasJac = false;
+                string songItem = "";
+                foreach (string file in Directory.GetFiles(extractPath, "*", SearchOption.AllDirectories))
+                {
+                    if (file.EndsWith(".mp3") || file.EndsWith(".ogg") || file.EndsWith(".wav"))
+                    {
+                        hasSong = true;
+                    }
+                    else if (file.EndsWith(".japs"))
+                    {
+                        // Get name of .japs
+                        songItem = Path.GetFileName(file); 
+                        hasJaps = true;
+                    }
+                    else if (file.EndsWith(".jac"))
+                    {
+                        hasJac = true;
+                    }
+                }
+
+                if (hasSong && hasJaps && hasJac)
+                {
+                    Debug.Log("Valid song package!");
+                    // This is added
+                    Playlist.ItemPaths.Add(Path.Combine(extractPath, songItem));
+                    InitPlaylist();
+                    // TODO: Add to song list, playlist, etc.
+                }
+                else
+                {
+                    Debug.LogWarning("Invalid chart: missing required files.");
+                    // Optional: Delete or warn user
+                }
+            }
+            catch (IOException ex)
+            {
+                Debug.LogError("Error importing ZIP: " + ex.Message);
+            }
+
+        }, new string[] { "application/zip" });
+    }
+
     #endregion
 
     #region Delete
@@ -702,7 +778,7 @@ public class SongSelectScreen : MonoBehaviour
 
         string originalPath = Playlist.ItemPaths[SongList.IndexOf(TargetSong.Song)];
         string songPath = Path.GetDirectoryName(originalPath) + Path.DirectorySeparatorChar;
-        string fullPath = Path.Combine(Application.dataPath, "JANOARG/Resources", songPath); // or adjust if needed
+        string fullPath = Path.Combine(Application.persistentDataPath, "Songs", songPath); 
 
         try
         {
