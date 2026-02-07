@@ -16,7 +16,7 @@ namespace JANOARG.Client.Behaviors.Player
         public float Size = 120;
 
         private PlayerScreen PlayerScreen => PlayerScreen.sMain;
-
+        private float Opacity;
         public void SetAccuracy(float? acc)
         {
             if (acc == null)
@@ -24,6 +24,7 @@ namespace JANOARG.Client.Behaviors.Player
                 RingFill1.fillAmount = RingFill2.fillAmount = 1;
                 RingBackground.resolution = RingFill1.resolution = RingFill2.resolution = 4;
                 Size = 60;
+                Opacity = PlayerScreen.Settings.HitVisualEffectOpacity[1] / 100;
             }
             else
             {
@@ -33,6 +34,7 @@ namespace JANOARG.Client.Behaviors.Player
                 RingFill1.fillAmount = RingFill2.fillAmount = (1 - Mathf.Abs((float)acc)) / 2;
                 RingFill1.rectTransform.localEulerAngles = Vector3.back * Mathf.Max((float)acc * 180, 0);
                 RingFill2.rectTransform.localEulerAngles = Vector3.forward * (RingFill1.rectTransform.localEulerAngles.z + 180);
+                Opacity = PlayerScreen.Settings.HitVisualEffectOpacity[0] / 100;
             }
         }
 
@@ -52,7 +54,7 @@ namespace JANOARG.Client.Behaviors.Player
                 CircleFill.rectTransform.sizeDelta = Vector2.one * (40 - (30 * ease));
 
                 float ease2 = Ease.Get(x, EaseFunction.Circle, EaseMode.In);
-                Group.alpha = (1 - ease2) * PlayerScreen.Settings.HitVisualEffectOpacity;
+                Group.alpha = (1 - ease2) * Opacity;
 
                 float ease3 = ease * .96f + x * .04f;
                 RingBackground.insideRadius = RingFill1.insideRadius = RingFill2.insideRadius = ease3;
