@@ -1138,6 +1138,8 @@ namespace JANOARG.Client.Behaviors.Player
         public bool  NoEarlyLateText;
         public bool  HighlightSimulNotes;
 
+        public float HitVisualEffectOpacity;
+
 
         public PlayerSettings()
         {
@@ -1147,6 +1149,7 @@ namespace JANOARG.Client.Behaviors.Player
             HighlightSimulNotes = CommonSys.sMain.Preferences.Get("PLYR:HighlightSimulNotes", true);
             ShowFlawlessText= CommonSys.sMain.Preferences.Get("PLYR:JudgementTextOnFlawless", true);
             NoEarlyLateText = CommonSys.sMain.Preferences.Get("PLYR:NoEarlyLateIndicator", false);
+            HitVisualEffectOpacity = CommonSys.sMain.Preferences.Get("PLYR:HitVisualEffectOpacity", 100f)/100f;
             
             BackgroundMusicVolume = prefs.Get("PLYR:BGMusicVolume", 100f) / 100;
             HitsoundVolume = prefs.Get("PLYR:HitsoundVolume", new[] { 60f });

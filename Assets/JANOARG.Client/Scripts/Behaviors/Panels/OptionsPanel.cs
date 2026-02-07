@@ -375,6 +375,20 @@ namespace JANOARG.Client.Behaviors.Panels
                         () => preferences.Get("PLYR:NoEarlyLateIndicator", false),
                         x => preferences.Set("PLYR:NoEarlyLateIndicator", x)
                     );
+
+                    sample.Min = msample.Min = 0f;
+                    sample.Max = msample.Max = 100f;
+                    sample.Step = msample.Step = 1f;
+                    sample.Unit = msample.Unit = "%";
+
+                    Spawn<FloatOptionInput, float>(
+                        "Hit Visual Effect Opacity",
+                        () => preferences.Get("PLYR:HitVisualEffectOpacity", 100f),
+                        x =>
+                        {
+                            preferences.Set("PLYR:HitVisualEffectOpacity", x);
+                        }
+                    );
                         
                 }
 

@@ -15,6 +15,8 @@ namespace JANOARG.Client.Behaviors.Player
 
         public float Size = 120;
 
+        private PlayerScreen PlayerScreen => PlayerScreen.sMain;
+
         public void SetAccuracy(float? acc)
         {
             if (acc == null)
@@ -50,7 +52,7 @@ namespace JANOARG.Client.Behaviors.Player
                 CircleFill.rectTransform.sizeDelta = Vector2.one * (40 - (30 * ease));
 
                 float ease2 = Ease.Get(x, EaseFunction.Circle, EaseMode.In);
-                Group.alpha = 1 - ease2;
+                Group.alpha = (1 - ease2) * PlayerScreen.Settings.HitVisualEffectOpacity;
 
                 float ease3 = ease * .96f + x * .04f;
                 RingBackground.insideRadius = RingFill1.insideRadius = RingFill2.insideRadius = ease3;
