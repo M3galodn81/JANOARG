@@ -353,6 +353,21 @@ namespace JANOARG.Client.Behaviors.Panels
                         }
                     );
 
+                    msample.Min = 0;
+                    msample.Max = 100;
+                    msample.Step = 5;
+                    msample.Unit = "%";
+                    msample.ValueType = MultiValueType.PerHitType;
+
+                    Spawn<MultiFloatOptionInput, float[]>(
+                        "Hit Visual Effect Opacity",
+                        () => preferences.Get("PLYR:HitVisualEffectOpacity",new[] { 100f }),
+                        x =>
+                        {
+                            preferences.Set("PLYR:HitVisualEffectOpacity", x);
+                        }
+                    );
+
                     Spawn <OptionCategoryTitle>("Miscellaneous");
 
                     Spawn<BooleanOptionInput, bool>(
@@ -374,21 +389,6 @@ namespace JANOARG.Client.Behaviors.Panels
                         "Disable early/late indicator",
                         () => preferences.Get("PLYR:NoEarlyLateIndicator", false),
                         x => preferences.Set("PLYR:NoEarlyLateIndicator", x)
-                    );
-
-                    msample.Min = 0;
-                    msample.Max = 100;
-                    msample.Step = 5;
-                    msample.Unit = "%";
-                    msample.ValueType = MultiValueType.PerHitType;
-
-                    Spawn<MultiFloatOptionInput, float[]>(
-                        "Hit Visual Effect Opacity",
-                        () => preferences.Get("PLYR:HitVisualEffectOpacity",new[] { 100f }),
-                        x =>
-                        {
-                            preferences.Set("PLYR:HitVisualEffectOpacity", x);
-                        }
                     );
                         
                 }
