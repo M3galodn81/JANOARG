@@ -35,7 +35,7 @@ namespace JANOARG.Client.Behaviors.SongSelect
 
         public Playlist Playlist;
         public Dictionary<string, PlayableSong> PlayableSongByID { get; private set; } = new();
-        public Dictionary<string, PlaylistSong> PlaylistSongByID { get; private set; } = new();
+        public Dictionary<string, PlaylistSong> PlaylistSongByID { get; private set; } = new();  
 
         [Header("List View")]
         public SongSelectListView ListView;
@@ -96,6 +96,8 @@ namespace JANOARG.Client.Behaviors.SongSelect
         public Button SortButton;
         public Button LaunchButton;
 
+        public Button ImportChartButton;
+
         [Header("Launch")]
         public CanvasGroup LaunchTextHolder;
         public TMP_Text LaunchText;
@@ -134,6 +136,7 @@ namespace JANOARG.Client.Behaviors.SongSelect
         [NonSerialized] public Cover CurrentCover;
 
         public bool IsTargetSongUnlocked { get; private set; }
+        public bool IsPlaylistExternal => Playlist is ExternalPlaylist;
         
         public void Awake()
         {
@@ -306,23 +309,31 @@ namespace JANOARG.Client.Behaviors.SongSelect
 
         public void UpdateButtons()
         {
+            // Back button is active when in map view with a song selected, or when there's a playlist to go back to
             BackButton.gameObject.SetActive(
                 (IsMapView && TargetMapItem is SongMapItem) 
                 || (MapManager.sPlaylistStack.Count > 1)
             );
-            ListViewButton.gameObject.SetActive(IsMapView && !TargetMapItem);
 
+
+            ListViewButton.gameObject.SetActive(IsMapView && !TargetMapItem);
+           
             MapViewButton.gameObject.SetActive(!IsMapView);
             SortButton.gameObject.SetActive(!IsMapView);
             LaunchButton.gameObject.SetActive(
                 !IsMapView || (TargetMapItem is SongMapItem && IsTargetSongUnlocked)
             );
             LaunchButton.interactable = IsTargetSongUnlocked;
+
+            ImportChartButton.gameObject.SetActive(IsPlaylistExternal);
         }
 
         public void ToggleView()
         {
             if (IsAnimating) return;
+            // Temporary solution for the case where the player tries to toggle view before the song items are loaded, 
+            // which causes null refs. This should be properly fixed later by disabling the map view button until the song items are loaded.
+            if (ListView.SongItems.Count == 0) return;
             IsMapView = !IsMapView;
             TargetSongAnim = StartCoroutine(ToggleViewAnim());
         }
@@ -927,6 +938,12 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 }
             }
         }
+
+        public void ImportChart()
+        {
+            return; 
+        }
+
 
         public void Launch() 
         {
