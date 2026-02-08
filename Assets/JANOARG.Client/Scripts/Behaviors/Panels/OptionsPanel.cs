@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.UI;
 
-namespace ANOARG.Client.Behaviors.Panels
+namespace JANOARG.Client.Behaviors.Panels
 {
     public class OptionsPanel : MonoBehaviour
     {
@@ -55,6 +55,13 @@ namespace ANOARG.Client.Behaviors.Panels
         public Transform  PreviewNormalLeft;
         public Transform  PreviewNormalRight;
         public MeshFilter PreviewNormalFlick;
+        
+        public Transform      PreviewNormalSimulCenter;
+        public Transform      PreviewNormalSimulLeft;
+        public Transform      PreviewNormalSimulRight;
+        public SpriteRenderer PreviewNormalSimulGlow;
+        public MeshRenderer     PreviewNormalSimulBold;
+
 
         public Transform  PreviewCatchCenter;
         public Transform  PreviewCatchLeft;
@@ -197,6 +204,9 @@ namespace ANOARG.Client.Behaviors.Panels
                         () => storage.Get("INFO:Name", "JANOARG"),
                         x => storage.Set("INFO:Name", x)
                     );
+
+                    var note = Spawn<OptionText>("Online stuff coming soon(?)");
+                    note.TitleLabel.fontSize = 8;
 
                     Spawn<OptionCategoryTitle>("Audio");
                     var sample = GetOptionItemSample<FloatOptionInput>();
@@ -342,6 +352,30 @@ namespace ANOARG.Client.Behaviors.Panels
                             UpdatePlayerPreview();
                         }
                     );
+
+                    Spawn <OptionCategoryTitle>("Miscellaneous");
+
+                    Spawn<BooleanOptionInput, bool>(
+                        "Highlight simul. notes",
+                        () => preferences.Get("PLYR:HighlightSimulNotes", true),
+                        x =>
+                        {
+                            preferences.Set("PLYR:HighlightSimulNotes", x);
+                            UpdatePlayerPreview();
+                        });
+                    
+                    Spawn<BooleanOptionInput, bool>(
+                        "Show FLAWLESS judgments",
+                        () => preferences.Get("PLYR:JudgementTextOnFlawless", true),
+                        x => preferences.Set("PLYR:JudgementTextOnFlawless", x)
+                    );
+                    
+                    Spawn<BooleanOptionInput, bool>(
+                        "Disable early/late indicator",
+                        () => preferences.Get("PLYR:NoEarlyLateIndicator", false),
+                        x => preferences.Set("PLYR:NoEarlyLateIndicator", x)
+                    );
+                        
                 }
 
                     break;
@@ -462,6 +496,22 @@ namespace ANOARG.Client.Behaviors.Panels
                 PreviewNormalLeft.localPosition = -PreviewNormalRight.localPosition;
             }
 
+            {   // For glowing (simultaneous) note
+                float scale = settings.HitObjectScale[0]; // Same as normal hit
+                PreviewNormalSimulCenter.localScale = new Vector3(width - .2f * scale, .4f * scale, .4f * scale);
+                PreviewNormalSimulLeft.localScale = PreviewNormalSimulRight.localScale = new Vector3(.2f, .4f, .4f) * scale;
+                PreviewNormalSimulRight.localPosition = Vector3.right * (width / 2 + .2f * scale);
+                PreviewNormalSimulLeft.localPosition = -PreviewNormalRight.localPosition;
+                
+                PreviewNormalSimulBold.gameObject.SetActive(settings.HighlightSimulNotes);
+                PreviewNormalSimulBold.material = new Material(Shader.Find("JANOARG/Styles/Default - Hit"));
+                PreviewNormalSimulBold.material.color = new Color(1, 1, 1, 0.75f);
+                
+                PreviewNormalSimulBold.transform.localScale = PreviewNormalSimulCenter.localScale;
+                PreviewNormalSimulBold.transform.localScale *= new Vector3Frag(y: PreviewNormalSimulCenter.localScale.y * 1.8f, z: PreviewNormalSimulCenter.localScale.z * .998f);
+                PreviewNormalSimulGlow.transform.localScale *= new Vector3Frag(y: PreviewNormalSimulBold.transform.localScale.y * 6f);
+            }
+
             PreviewCatchFlick.transform.localScale = PreviewNormalFlick.transform.localScale
                 = Vector2.one * settings.FlickScale;
         }
@@ -481,7 +531,8 @@ namespace ANOARG.Client.Behaviors.Panels
 
         public void ClearAll()
         {
-            foreach (OptionItem item in CurrentItems) Destroy(item.gameObject);
+            foreach (OptionItem item in CurrentItems)
+                Destroy(item.gameObject);
             CurrentItems.Clear();
         }
 
