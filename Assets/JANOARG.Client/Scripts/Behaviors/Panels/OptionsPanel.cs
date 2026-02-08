@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.UI;
 
-namespace ANOARG.Client.Behaviors.Panels
+namespace JANOARG.Client.Behaviors.Panels
 {
     public class OptionsPanel : MonoBehaviour
     {
