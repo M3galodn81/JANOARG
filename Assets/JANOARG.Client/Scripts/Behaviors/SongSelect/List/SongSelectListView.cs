@@ -130,6 +130,7 @@ namespace JANOARG.Client.Behaviors.SongSelect.List
             bool CanAddSong(string songID)
             {
                 Debug.Assert(MapManager.sSongMapItemsByID.ContainsKey(songID), "Song ID not found in MapManager: " + songID);
+                Debug.Log("Playlist Map Items Count: " + MapManager.sSongMapItemsByID.Count);
                 return MapManager.sSongMapItemsByID[songID].isRevealed;
             }
             void AddSong(string songID)

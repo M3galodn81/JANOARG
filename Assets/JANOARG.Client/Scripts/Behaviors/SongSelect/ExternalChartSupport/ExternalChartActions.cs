@@ -194,7 +194,7 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 child.transform.SetParent(parent.transform, false);
 
                 // Incremental positioning
-                child.transform.localPosition = new Vector3(index * 50f, 0f, 0f);
+                child.transform.localPosition = new Vector3(index * 5f, 0f, 0f);
                 index++;
 
                 // Add + initialize safely

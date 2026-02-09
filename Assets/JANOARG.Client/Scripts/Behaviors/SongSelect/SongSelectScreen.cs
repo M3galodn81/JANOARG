@@ -267,8 +267,6 @@ namespace JANOARG.Client.Behaviors.SongSelect
             int pos = 0;
             MapManager.LoadMap();
             
-            
-
             foreach (PlaylistSong songInfo in Playlist.Songs)
             {
                 string externalPath = $"{Application.persistentDataPath}/Charts/{songInfo.ID}/{songInfo.ID}";
@@ -281,6 +279,8 @@ namespace JANOARG.Client.Behaviors.SongSelect
                     PlayableSong song = JAPSDecoder.Decode(songInfo.ID);
                     PlayableSongByID.Add(songInfo.ID, song);
                     PlaylistSongByID.Add(songInfo.ID, songInfo);
+
+                    Debug.Log($"[Map Management] Successfully loaded external song: {song.SongName} by {song.SongArtist}");
                 } 
                 else
                 {
