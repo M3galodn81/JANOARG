@@ -96,6 +96,8 @@ namespace JANOARG.Client.Behaviors.SongSelect
         public Button SortButton;
         public Button LaunchButton;
 
+        [Header("External Chart Support")]
+        public ExternalChartActions externalChartActions;
         public Button ImportChartButton;
 
         [Header("Launch")]
@@ -265,7 +267,8 @@ namespace JANOARG.Client.Behaviors.SongSelect
             MapManager.LoadMap();
             foreach (PlaylistSong songInfo in Playlist.Songs)
             {
-                string path = $"Songs/{songInfo.ID}/{songInfo.ID}";
+                string externalPath = Path.Combine(Application.persistentDataPath, "Charts", songInfo.ID);
+                string path = IsPlaylistExternal ? externalPath : $"Songs/{songInfo.ID}/{songInfo.ID}";
                 ResourceRequest req = Resources.LoadAsync<ExternalPlayableSong>(path);
                 yield return new WaitUntil(() => req.isDone);
                 if (!req.asset)
@@ -314,7 +317,6 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 (IsMapView && TargetMapItem is SongMapItem) 
                 || (MapManager.sPlaylistStack.Count > 1)
             );
-
 
             ListViewButton.gameObject.SetActive(IsMapView && !TargetMapItem);
            
@@ -941,7 +943,7 @@ namespace JANOARG.Client.Behaviors.SongSelect
 
         public void ImportChart()
         {
-            return; 
+            externalChartActions.PickZip();
         }
 
 

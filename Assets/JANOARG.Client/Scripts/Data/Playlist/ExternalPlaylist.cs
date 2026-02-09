@@ -9,7 +9,24 @@ namespace JANOARG.Client.Data.Playlist
     [CreateAssetMenu(fileName = "New External Playlist", menuName = "JANOARG/ExternalPlaylist", order = 200)]
     public class ExternalPlaylist : Playlist
     {
+        public List<PlaylistSong> Songlist = new List<PlaylistSong>();
+        
+        public void ArrayToList()
+        {
+            Songlist = new List<PlaylistSong>(Songs);
+        }
 
+        public void ListToArray()
+        {
+            Songs = Songlist.ToArray();
+        }
+
+        public void AddSong(PlaylistSong song)
+        {   
+            ArrayToList();
+            Songlist.Add(song);
+            ListToArray();
+        }
     }
 
 }

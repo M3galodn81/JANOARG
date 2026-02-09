@@ -471,6 +471,7 @@ GameObject:
   - component: {fileID: 46041078}
   - component: {fileID: 46041080}
   - component: {fileID: 46041079}
+  - component: {fileID: 46041083}
   m_Layer: 5
   m_Name: Import Chart
   m_TagString: Untagged
@@ -629,6 +630,18 @@ RectTransform:
   m_AnchoredPosition: {x: 489.99, y: -10}
   m_SizeDelta: {x: 61, y: 40}
   m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &46041083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46041076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b351c9b01e47584d87a723071ac6d32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &56737245
 GameObject:
   m_ObjectHideFlags: 0
@@ -10854,6 +10867,7 @@ MonoBehaviour:
   ListViewButton: {fileID: 256673773}
   SortButton: {fileID: 1849820841}
   LaunchButton: {fileID: 140450918}
+  externalChartActions: {fileID: 46041083}
   ImportChartButton: {fileID: 46041077}
   LaunchTextHolder: {fileID: 392552628}
   LaunchText: {fileID: 1612266646}
