@@ -4019,6 +4019,7 @@ GameObject:
   m_Component:
   - component: {fileID: 446720070}
   - component: {fileID: 446720069}
+  - component: {fileID: 446720071}
   m_Layer: 0
   m_Name: Fanmade Chart Support
   m_TagString: Untagged
@@ -4054,6 +4055,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &446720071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446720068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad3003699d2f94e4c89b16a88005cc79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExternalPlaylist: {fileID: 11400000, guid: ab35f3f6083448a49a9932f300953ff6, type: 2}
+  isInitialized: 0
 --- !u!1 &452121710
 GameObject:
   m_ObjectHideFlags: 0
@@ -10900,6 +10915,7 @@ MonoBehaviour:
   SortButton: {fileID: 1849820841}
   LaunchButton: {fileID: 140450918}
   externalChartActions: {fileID: 446720069}
+  externalSongImport: {fileID: 446720071}
   ImportChartButton: {fileID: 46041077}
   LaunchTextHolder: {fileID: 392552628}
   LaunchText: {fileID: 1612266646}

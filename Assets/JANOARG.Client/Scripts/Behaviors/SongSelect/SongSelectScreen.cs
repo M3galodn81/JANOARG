@@ -99,6 +99,7 @@ namespace JANOARG.Client.Behaviors.SongSelect
 
         [Header("External Chart Support")]
         public ExternalChartActions externalChartActions;
+        public ExternalSongImport externalSongImport;
         public Button ImportChartButton;
 
         [Header("Launch")]
@@ -266,17 +267,19 @@ namespace JANOARG.Client.Behaviors.SongSelect
             int index = 0;
             int pos = 0;
             MapManager.LoadMap();
-            
             foreach (PlaylistSong songInfo in Playlist.Songs)
             {
-                string externalPath = $"{Application.persistentDataPath}/Charts/{songInfo.ID}/{songInfo.ID}";
-                string path = IsPlaylistExternal ? externalPath : $"Songs/{songInfo.ID}/{songInfo.ID}";
-
-                Debug.Log($"[Map Management] Loading song {songInfo.ID} from path: {path}");
                 if (IsPlaylistExternal)
                 {
+                   
+                    //TODO: Implement loader for fanmade charts    
+                    string externalPath = $"{Application.persistentDataPath}/Charts/{songInfo.ID}";
                     //Init Decoder
-                    PlayableSong song = JAPSDecoder.Decode(songInfo.ID);
+                    string chartContent = File.ReadAllText(externalPath + $"/{songInfo.ID}.japs");
+                    PlayableSong song = JAPSDecoder.Decode(chartContent);
+
+                   
+
                     PlayableSongByID.Add(songInfo.ID, song);
                     PlaylistSongByID.Add(songInfo.ID, songInfo);
 
@@ -284,6 +287,8 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 } 
                 else
                 {
+                    string path = $"Songs/{songInfo.ID}/{songInfo.ID}";
+
                     ResourceRequest req = Resources.LoadAsync<ExternalPlayableSong>(path);
                     yield return new WaitUntil(() => req.isDone);
                     if (!req.asset)
@@ -304,6 +309,11 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 pos += 48; 
             }
 
+            if (IsPlaylistExternal)
+            {
+            StartCoroutine(externalSongImport.UpdateScene());
+            yield return null;
+            }
             ListView.UpdateSort();
 
             yield return new WaitUntil(() => MapManager.isReady);

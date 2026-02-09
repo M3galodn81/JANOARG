@@ -7,54 +7,71 @@ using JANOARG.Client.Behaviors.SongSelect.Map.MapItems;
 
 namespace JANOARG.Client.Behaviors.SongSelect
 {
-    public class ExternalSongImport : MonoBehaviour
+   public class ExternalSongImport : MonoBehaviour
     {
         public ExternalPlaylist ExternalPlaylist;
-        void Awake()
-        {
-            UpdateScene();
-        }
-        
-        public void UpdateScene()
+        public bool isInitialized = false;
+        public IEnumerator UpdateScene()
         {   
-            string sceneName = SongSelectScreen.sMain.Playlist.MapName + " Map";
+            isInitialized = false;
+            
+            // 1. Wait for the end of frame or a tiny delay to ensure the scene is ready
+            yield return new WaitForEndOfFrame();
+
             GameObject parent = GameObject.Find("External Song Items");
 
             if (parent == null)
             {
-                Debug.LogError("External Song Items not found in scene " + sceneName + "!");
-                return;
+                Debug.LogError("[Playlist Management] 'External Song Items' container not found!");
+                yield break;
             }
 
-            // --- NEW: Remove existing children ---
+            // 2. Clear existing children properly
+            // We use a list to avoid modifying the collection while iterating
+            List<GameObject> toDestroy = new List<GameObject>();
             foreach (Transform child in parent.transform)
             {
-                // Use Destroy for normal play, or DestroyImmediate if this runs in-editor
-                GameObject.Destroy(child.gameObject);
+                toDestroy.Add(child.gameObject);
             }
-            // -------------------------------------
+            
+            foreach (GameObject obj in toDestroy)
+            {
+                Destroy(obj);
+            }
 
-            // Reset index to 0 because the parent is now empty
+            // 3. IMPORTANT: Wait for the next frame so the 'Destroyed' objects are actually gone
+            // This prevents index or physics glitches.
+            yield return null;
+
             int index = 0; 
 
-            ExternalPlaylist.ArrayToList(); // Ensure the list is up to date with the array
+            // Safely convert array to list if needed
+            ExternalPlaylist.ArrayToList(); 
+
+            if (ExternalPlaylist.Songlist == null)
+            {
+                Debug.LogError("[Playlist Management] Songlist is null!");
+                yield break;
+            }
+
             foreach (PlaylistSong song in ExternalPlaylist.Songlist)
             {
                 Debug.Log("[Playlist Management] Adding song in map: " + song.ID);
 
-                GameObject child = new GameObject($"{song.ID}");
+                GameObject child = new GameObject($"Song_{song.ID}");
                 child.transform.SetParent(parent.transform, false);
 
-                // Incremental positioning
+                // Incremental positioning (Spaced by 5 units)
                 child.transform.localPosition = new Vector3(index * 5f, 0f, 0f);
-                index++;
-
-                // Add + initialize safely
+                
+                // Add + initialize
                 SongMapItem item = child.AddComponent<SongMapItem>();
                 item.Initialize(song);
+                
+                index++;
             }
+
+            isInitialized = true;
         }
-
-
     }
 }
