@@ -642,6 +642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b351c9b01e47584d87a723071ac6d32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ExternalPlaylist: {fileID: 11400000, guid: ab35f3f6083448a49a9932f300953ff6, type: 2}
 --- !u!1 &56737245
 GameObject:
   m_ObjectHideFlags: 0

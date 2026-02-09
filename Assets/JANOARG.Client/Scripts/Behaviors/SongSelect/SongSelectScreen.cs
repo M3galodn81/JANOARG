@@ -265,10 +265,12 @@ namespace JANOARG.Client.Behaviors.SongSelect
             int index = 0;
             int pos = 0;
             MapManager.LoadMap();
+            
             foreach (PlaylistSong songInfo in Playlist.Songs)
             {
-                string externalPath = Path.Combine(Application.persistentDataPath, "Charts", songInfo.ID);
+                string externalPath = $"{Application.persistentDataPath}/Charts/{songInfo.ID}/{songInfo.ID}";
                 string path = IsPlaylistExternal ? externalPath : $"Songs/{songInfo.ID}/{songInfo.ID}";
+                Debug.Log($"Loading song {songInfo.ID} from path: {path}");
                 ResourceRequest req = Resources.LoadAsync<ExternalPlayableSong>(path);
                 yield return new WaitUntil(() => req.isDone);
                 if (!req.asset)

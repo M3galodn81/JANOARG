@@ -127,7 +127,6 @@ namespace JANOARG.Client.Behaviors.SongSelect.Map
             string sceneName = SongSelectScreen.sMain.Playlist.MapName + " Map";
             yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             MapScene = SceneManager.GetSceneByName(sceneName);
-
             yield return null;
 
             isReady = true;

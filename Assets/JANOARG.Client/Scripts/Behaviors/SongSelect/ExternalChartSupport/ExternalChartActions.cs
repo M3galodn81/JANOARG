@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using static NativeFilePicker;
 using JANOARG.Client.Data.Playlist;
+using JANOARG.Client.Behaviors.SongSelect.Map.MapItems;
 
 namespace JANOARG.Client.Behaviors.SongSelect
 {
@@ -147,15 +148,47 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 UnlockConditions = new GameConditional[0]
             };
             playlist.AddSong(newSong);
-
-
+            UpdateScene();
+            
+            
 
             return true;
         }
 
         public void UpdateScene()
-        {
+        {   
+            // Get Scene
+            string sceneName = SongSelectScreen.sMain.Playlist.MapName + " Map";
+            Scene MapScene = SceneManager.GetSceneByName(sceneName);
+
+            // Get External Song Item 
+             GameObject parent = GameObject.Find("External Song Items");
+
+            if (parent == null)
+            {
+                Debug.LogError("External Song Items not found in scene!");
+                return;
+            }
+
+            int index = parent.transform.childCount;
+
+            foreach (PlaylistSong song in ExternalPlaylist.Songlist)
+            {
+                Debug.Log("[Playlist Management] Adding song in map: " + song.ID);
+
+                GameObject child = new GameObject($"Song Item {song.ID}");
+                child.transform.SetParent(parent.transform, false);
+
+                // Incremental positioning
+                child.transform.localPosition = new Vector3(index * 50f, 0f, 0f);
+                index++;
+
+                // Add + initialize safely
+                SongMapItem item = child.AddComponent<SongMapItem>();
+                item.Initialize(song);
+            }
             
+        
         }
 
         #endregion
