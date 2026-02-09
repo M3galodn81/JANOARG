@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JANOARG.Client.Behaviors.Common;
+using JANOARG.Client.Behaviors.SongSelect;
 using JANOARG.Client.Behaviors.SongSelect.List.ListItemUIs;
 using JANOARG.Client.Behaviors.SongSelect.Map.MapItems;
 using JANOARG.Client.Behaviors.SongSelect.Map.MapItemUIs;
@@ -129,7 +130,19 @@ namespace JANOARG.Client.Behaviors.SongSelect.Map
             MapScene = SceneManager.GetSceneByName(sceneName);
             yield return null;
 
+            if (SongSelectScreen.sMain.IsPlaylistExternal)
+            {
+                Debug.Log("[MapManager] Detected external playlist, refreshing playlist in map manager.");
+                ExternalChartActions externalChartActions = SongSelectScreen.sMain.externalChartActions;
+                externalChartActions.RefreshPlaylist(SongSelectScreen.sMain.Playlist as ExternalPlaylist);
+            }
+
             isReady = true;
+        }
+
+        IEnumerator LoadExternalSongs()
+        {
+            
         }
         public void UnloadMap()
         {

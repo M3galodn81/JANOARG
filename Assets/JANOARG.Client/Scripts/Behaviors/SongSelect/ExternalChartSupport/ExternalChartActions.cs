@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using static NativeFilePicker;
@@ -17,11 +20,11 @@ namespace JANOARG.Client.Behaviors.SongSelect
     //FIXME: This abomination make this more readable and maintainable
     public class ExternalChartActions : MonoBehaviour
     {
-        public static ExternalChartActions sMain;
         public ExternalPlaylist ExternalPlaylist;
         public void Awake()
         {
-            sMain = this;
+            Debug.Log("ExternalChartActions Awake");
+            // sMain = this;
         }
         #region Importing Charts
         //Get ZIP file from user
@@ -150,9 +153,14 @@ namespace JANOARG.Client.Behaviors.SongSelect
             playlist.AddSong(newSong);
             UpdateScene();
             
-            
-
             return true;
+        }
+
+        public void RefreshPlaylist(ExternalPlaylist playlist)
+        {
+            Debug.Log("[Playlist Management] Refreshing playlist with " + playlist.Songs.Length + " songs");
+            
+            UpdateScene();
         }
 
         public void UpdateScene()
@@ -161,12 +169,18 @@ namespace JANOARG.Client.Behaviors.SongSelect
             string sceneName = SongSelectScreen.sMain.Playlist.MapName + " Map";
             Scene MapScene = SceneManager.GetSceneByName(sceneName);
 
+            if (!MapScene.isLoaded)
+            {
+                Debug.LogError("[Playlist Management] Map scene is not loaded: " + sceneName);
+                return;
+            }
+
             // Get External Song Item 
-             GameObject parent = GameObject.Find("External Song Items");
+            GameObject parent = GameObject.Find("External Song Items");
 
             if (parent == null)
             {
-                Debug.LogError("External Song Items not found in scene!");
+                Debug.LogError("External Song Items not found in scene " + sceneName + "!");
                 return;
             }
 
@@ -176,7 +190,7 @@ namespace JANOARG.Client.Behaviors.SongSelect
             {
                 Debug.Log("[Playlist Management] Adding song in map: " + song.ID);
 
-                GameObject child = new GameObject($"Song Item {song.ID}");
+                GameObject child = new GameObject($"{song.ID}");
                 child.transform.SetParent(parent.transform, false);
 
                 // Incremental positioning
@@ -187,8 +201,6 @@ namespace JANOARG.Client.Behaviors.SongSelect
                 SongMapItem item = child.AddComponent<SongMapItem>();
                 item.Initialize(song);
             }
-            
-        
         }
 
         #endregion

@@ -27,6 +27,20 @@ namespace JANOARG.Client.Data.Playlist
             Songlist.Add(song);
             ListToArray();
         }
+
+        public void RemoveSong(PlaylistSong song)
+        {
+            ArrayToList();
+            Songlist.Remove(song);
+            ListToArray();
+        }
+
+        public void ClearSongs()
+        {
+            ArrayToList();
+            Songlist.Clear();
+            ListToArray();
+        }
     }
 
 }

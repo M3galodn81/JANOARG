@@ -24,6 +24,7 @@ using JANOARG.Client.Utils;
 using UnityEngine.Assertions;
 using System.Linq;
 using JANOARG.Client.Behaviors.SongSelect.Map.MapProps;
+using JANOARG.Shared.Data.Files;
 
 namespace JANOARG.Client.Behaviors.SongSelect
 {
@@ -266,22 +267,39 @@ namespace JANOARG.Client.Behaviors.SongSelect
             int pos = 0;
             MapManager.LoadMap();
             
+            
+
             foreach (PlaylistSong songInfo in Playlist.Songs)
             {
                 string externalPath = $"{Application.persistentDataPath}/Charts/{songInfo.ID}/{songInfo.ID}";
                 string path = IsPlaylistExternal ? externalPath : $"Songs/{songInfo.ID}/{songInfo.ID}";
-                Debug.Log($"Loading song {songInfo.ID} from path: {path}");
-                ResourceRequest req = Resources.LoadAsync<ExternalPlayableSong>(path);
-                yield return new WaitUntil(() => req.isDone);
-                if (!req.asset)
-                {
-                    Debug.LogWarning("Couldn't load Playable Song at " + path);
-                    continue;
-                }
-                PlayableSong song = ((ExternalPlayableSong)req.asset).Data;
-                PlayableSongByID.Add(songInfo.ID, song);
-                PlaylistSongByID.Add(songInfo.ID, songInfo);
 
+                Debug.Log($"[Map Management] Loading song {songInfo.ID} from path: {path}");
+                if (IsPlaylistExternal)
+                {
+                    //Init Decoder
+                    PlayableSong song = JAPSDecoder.Decode(songInfo.ID);
+                    PlayableSongByID.Add(songInfo.ID, song);
+                    PlaylistSongByID.Add(songInfo.ID, songInfo);
+                } 
+                else
+                {
+                    ResourceRequest req = Resources.LoadAsync<ExternalPlayableSong>(path);
+                    yield return new WaitUntil(() => req.isDone);
+                    if (!req.asset)
+                    {
+                        Debug.LogWarning("Couldn't load Playable Song at " + path);
+                        continue;
+                    }
+
+                    PlayableSong song = ((ExternalPlayableSong)req.asset).Data;
+                    PlayableSongByID.Add(songInfo.ID, song);
+                    PlaylistSongByID.Add(songInfo.ID, songInfo);
+
+                }
+                
+
+               
                 index++;
                 pos += 48; 
             }
