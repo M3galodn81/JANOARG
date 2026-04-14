@@ -4,10 +4,12 @@ using System.IO;
 using System.Threading.Tasks;
 using JANOARG.Client.Behaviors.Common;
 using JANOARG.Client.Data.Storage;
+using JANOARG.Client.UI.Modal;
 using JANOARG.Client.Utils;
 using JANOARG.Shared.Data.ChartInfo;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ANOARG.Client.Behaviors.Panels
 {
@@ -26,6 +28,8 @@ namespace ANOARG.Client.Behaviors.Panels
         public TMP_Text FullStreakCount;
         public TMP_Text ClearedCount;
         public TMP_Text UnlockedCount;
+
+        public GameObject RatingBreakdownModalBody;
 
         public bool isAnimating { get; private set; }
 
@@ -118,6 +122,20 @@ namespace ANOARG.Client.Behaviors.Panels
             unlockedCount++;
 
             return new[] { allFlawlessCount, fullStreakCount, clearedCount, unlockedCount };
+        }
+
+        public void OpenRatingBreakdownModal()
+        {
+            ModalManager.sInstance.Spawn(
+                "Rating Breakdown",
+                RatingBreakdownModalBody,
+                new ModalAction[] {
+                    new () {
+                        Name = "Close",
+                        Icon = ProfileBar.sMain.ArrowLeftIcon,
+                    }
+                }
+            );
         }
 
         public Texture2D Screenshot(int width, int height)
