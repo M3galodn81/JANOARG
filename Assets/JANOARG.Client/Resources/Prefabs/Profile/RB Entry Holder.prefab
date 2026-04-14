@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 5000869515955927337}
   - component: {fileID: 7382694725024402215}
   - component: {fileID: 4416043086862842039}
-  - component: {fileID: 348375467708589907}
+  - component: {fileID: 2845312011324422422}
   m_Layer: 5
   m_Name: Rating Info
   m_TagString: Untagged
@@ -570,7 +570,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 0, y: -2}
   m_UseGraphicAlpha: 1
---- !u!114 &348375467708589907
+--- !u!114 &2845312011324422422
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -579,27 +579,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 4376397882206589961}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &4820049359423087139
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,7 +774,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5596967828832639702}
   - component: {fileID: 5596967828832639696}
-  - component: {fileID: 1418852833524301426}
+  - component: {fileID: 6778064677351753685}
   m_Layer: 5
   m_Name: Cover
   m_TagString: Untagged
@@ -812,7 +809,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5596967828832639701}
   m_CullTransparentMesh: 1
---- !u!114 &1418852833524301426
+--- !u!114 &6778064677351753685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -821,27 +818,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 5596967828832639701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.23584908, g: 0.23584908, b: 0.23584908, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &5596967829533951131
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,7 +847,7 @@ GameObject:
   - component: {fileID: 5596967829533951124}
   - component: {fileID: 5596967829533951126}
   - component: {fileID: 621113464136588496}
-  - component: {fileID: 8546561980183102411}
+  - component: {fileID: 905608169290981247}
   m_Layer: 5
   m_Name: RB Entry Holder
   m_TagString: Untagged
@@ -904,7 +898,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &8546561980183102411
+--- !u!114 &905608169290981247
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -921,8 +915,8 @@ MonoBehaviour:
   SongName: {fileID: 5596967829852412492}
   SongArtist: {fileID: 5596967830536910773}
   ChartConstant: {fileID: 5596967830407052020}
-  Icon: {fileID: 1418852833524301426}
-  BackgroundCover: {fileID: 348375467708589907}
+  Icon: {fileID: 6778064677351753685}
+  BackgroundCover: {fileID: 2845312011324422422}
   FullStreakIndicator: {fileID: 8959675981082309327}
   AllFlawlessIndicator: {fileID: 2654592947694407344}
 --- !u!1 &5596967829852412850
@@ -1530,7 +1524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 1
+  m_HorizontalFit: 2
   m_VerticalFit: 0
 --- !u!114 &1076044499087163470
 MonoBehaviour:

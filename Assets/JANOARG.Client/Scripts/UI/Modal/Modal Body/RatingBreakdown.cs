@@ -21,7 +21,7 @@ namespace JANOARG.Client.UI
 
         //This Playlist will be the main/root playlist so we can use the PlayableSong's metachart and cover
         public Playlist MainPlaylist;
-       public Dictionary<string, PlayableSong> SongDict;
+        public Dictionary<string, PlayableSong> SongDict;
 
         public IEnumerator BuildSongList()
         {
@@ -92,7 +92,7 @@ namespace JANOARG.Client.UI
             }
         }
 
-        public IEnumerator GetCoverImage(PlayableSong song, string id, System.Action<Sprite> onDone)
+        public IEnumerator GetCoverImage(PlayableSong song, string id, System.Action<Texture2D> onDone)
         {
             string imagePath = song.Cover.Layers[0].Target;
             string path = $"Songs/{id}/{imagePath}";
@@ -110,18 +110,9 @@ namespace JANOARG.Client.UI
                 yield break;
             }
 
-            var texture = (Texture2D)req.asset;
-
-            Sprite sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f)
-            );
-
-            onDone?.Invoke(sprite);
+            onDone?.Invoke((Texture2D)req.asset);
         }
-
-        public IEnumerator GetIconImage(string id, System.Action<Sprite> onDone)
+        public IEnumerator GetIconImage(string id, System.Action<Texture2D> onDone)
         {
             string path = $"Songs/{id}/icon";
 
@@ -135,15 +126,7 @@ namespace JANOARG.Client.UI
                 yield break;
             }
 
-            var texture = (Texture2D)req.asset;
-
-            Sprite sprite = Sprite.Create(
-                texture,
-                new Rect(0, 0, texture.width, texture.height),
-                new Vector2(0.5f, 0.5f)
-            );
-
-            onDone?.Invoke(sprite);
+            onDone?.Invoke((Texture2D)req.asset);
         }
 
 
@@ -193,34 +176,34 @@ namespace JANOARG.Client.UI
                 {
                     RatingBreakdownEntries[i].SongName.text = song.SongName;
                     RatingBreakdownEntries[i].SongArtist.text = song.SongArtist;
+                    RatingBreakdownEntries[i].ChartConstant.text = song.Charts.Find(x => x.Target == entry.ChartID).DifficultyLevel.ToString();
                     
-                    Sprite iconSprite = null;
+                    Texture2D iconTex = null;
 
                     yield return StartCoroutine(
-                        GetIconImage(entry.SongID, (sprite) =>
+                        GetIconImage(entry.SongID, (tex) =>
                         {
-                            iconSprite = sprite;
+                            iconTex = tex;
                         })
                     );
 
-                    if (iconSprite != null)
+                    if (iconTex != null)
                     {
-                        RatingBreakdownEntries[i].Icon.sprite = iconSprite;
-                    }   
+                        RatingBreakdownEntries[i].Icon.texture = iconTex;
+                    } 
 
-                    // ⭐ IMPORTANT: WAIT here before moving to next entry
-                    Sprite coverSprite = null;
+                    Texture2D coverTex = null;
 
                     yield return StartCoroutine(
-                        GetCoverImage(song, entry.SongID, (sprite) =>
+                        GetCoverImage(song, entry.SongID, (tex) =>
                         {
-                            coverSprite = sprite;
+                            coverTex = tex;
                         })
                     );
 
-                    if (coverSprite != null)
+                    if (coverTex != null)
                     {
-                        RatingBreakdownEntries[i].BackgroundCover.sprite = coverSprite;
+                        RatingBreakdownEntries[i].BackgroundCover.texture = coverTex;
                     }
                 }
                 else

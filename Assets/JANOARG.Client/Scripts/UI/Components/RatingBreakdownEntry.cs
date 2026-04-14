@@ -22,8 +22,8 @@ namespace JANOARG.Client.Behaviors.Panels.Profile
         public TMP_Text SongArtist;
         public TMP_Text ChartConstant;
 
-        public Image Icon;
-        public Image BackgroundCover;
+        public RawImage Icon;
+        public RawImage BackgroundCover;
 
         public GameObject FullStreakIndicator;
         public GameObject AllFlawlessIndicator;
