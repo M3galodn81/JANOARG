@@ -209,6 +209,10 @@ namespace JANOARG.Client.UI
                     if (coverTex != null)
                     {
                         RatingBreakdownEntries[i].BackgroundCover.texture = coverTex;
+                        RatingBreakdownEntries[i].BackgroundCover.color = Color.white;
+                    } else
+                    {
+                        Debug.LogWarning($"Cover not found: {entry.SongID}");
                     }
                 }
                 else

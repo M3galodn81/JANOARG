@@ -28,6 +28,10 @@ namespace JANOARG.Client.Behaviors.Panels.Profile
         public GameObject FullStreakIndicator;
         public GameObject AllFlawlessIndicator;
 
+        public TMP_Text FlawlessCount;
+        public TMP_Text MisalignedCount;
+        public TMP_Text BrokenCount;
+
         // private List<SongSelectItemUI> _SongSelectItems;
         // private Color _Color;
 
@@ -48,6 +52,21 @@ namespace JANOARG.Client.Behaviors.Panels.Profile
             {
                 AllFlawlessIndicator.SetActive(true);
             }
+
+            if (BrokenCount != null)
+            {
+                BrokenCount.text = entry.BadCount.ToString();
+            }
+            if (MisalignedCount != null)
+            {
+                MisalignedCount.text = entry.GoodCount.ToString();
+            }
+            if (FlawlessCount != null)
+            {
+                FlawlessCount.text = entry.PerfectCount.ToString();
+            }
+
+
         }
 
         
