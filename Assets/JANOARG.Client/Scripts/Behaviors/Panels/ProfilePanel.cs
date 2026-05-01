@@ -16,9 +16,6 @@ namespace ANOARG.Client.Behaviors.Panels
 {
     public class ProfilePanel : MonoBehaviour
     {
-        public Camera ScreenshotCamera;
-
-        [Space]
         public TMP_Text PlayerName;
 
         public TMP_Text PlayerTitle;
@@ -151,47 +148,5 @@ namespace ANOARG.Client.Behaviors.Panels
         
         }
 
-        public Texture2D Screenshot(int width, int height)
-        {
-            RenderTexture rTex = new(width, height, 16, RenderTextureFormat.ARGB32);
-            rTex.Create();
-
-            ScreenshotCamera.targetTexture = rTex;
-            ScreenshotCamera.Render();
-
-            Texture2D tex2D = new(width, height, TextureFormat.ARGB32, false);
-            RenderTexture.active = rTex;
-            tex2D.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-            tex2D.Apply();
-
-            ScreenshotCamera.targetTexture = null;
-            rTex.Release();
-
-            return tex2D;
-        }
-
-        public void ScreenshotRatingBreakdown()
-        {
-            if (!isAnimating) StartCoroutine(ScreenshotRatingBreakdownAnim());
-        }
-
-        public IEnumerator ScreenshotRatingBreakdownAnim()
-        {
-            isAnimating = true;
-            Texture2D image = Screenshot(3072, 1280);
-
-            yield return Share(image);
-
-            isAnimating = false;
-        }
-
-        public IEnumerator Share(Texture2D image)
-        {
-            Task task = File.WriteAllBytesAsync(
-                Application.persistentDataPath + "/screenshot.png",
-                image.EncodeToPNG());
-
-            yield return new WaitUntil(() => task.IsCompleted);
-        }
     }
 }

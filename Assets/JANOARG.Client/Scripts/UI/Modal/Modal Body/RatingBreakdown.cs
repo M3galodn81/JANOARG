@@ -10,14 +10,18 @@ using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Playables;
+using System.Threading.Tasks;
 
 namespace JANOARG.Client.UI
 {
     public class RatingBreakdownModalBody : MonoBehaviour
     {
         public ScrollRect ScrollRect;
-        public List<RatingBreakdownEntry> RatingBreakdownEntries;
+        public Camera ScreenshotCamera;
 
+        public bool IsAnimating = false;
+        
+        public List<RatingBreakdownEntry> RatingBreakdownEntries;
         public List<ScoreStoreEntry> ScoreStoreEntries;
 
         //This Playlist will be the main/root playlist so we can use the PlayableSong's metachart and cover
@@ -214,12 +218,54 @@ namespace JANOARG.Client.UI
             }
         }
         
-
         string Truncate(string text, int maxLength)
         {
             return text.Length > maxLength
                 ? text.Substring(0, maxLength) + "..."
                 : text;
+        }
+
+        public Texture2D Screenshot(int width, int height)
+        {
+            RenderTexture rTex = new(width, height, 16, RenderTextureFormat.ARGB32);
+            rTex.Create();
+
+            ScreenshotCamera.targetTexture = rTex;
+            ScreenshotCamera.Render();
+
+            Texture2D tex2D = new(width, height, TextureFormat.ARGB32, false);
+            RenderTexture.active = rTex;
+            tex2D.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex2D.Apply();
+
+            ScreenshotCamera.targetTexture = null;
+            rTex.Release();
+
+            return tex2D;
+        }
+
+        public void ScreenshotRatingBreakdown()
+        {
+            if (!IsAnimating) StartCoroutine(ScreenshotRatingBreakdownAnim());
+        }
+
+        public IEnumerator ScreenshotRatingBreakdownAnim()
+        {
+            IsAnimating = true;
+            Texture2D image = Screenshot(3072, 1280);
+
+            yield return Share(image);
+
+            IsAnimating = false;
+        }
+
+        public IEnumerator Share(Texture2D image)
+        {
+            Task task = File.WriteAllBytesAsync(
+                Application.persistentDataPath + "/screenshot.png",
+                image.EncodeToPNG());
+
+            yield return new WaitUntil(() => task.IsCompleted);
         }
     }
 }
