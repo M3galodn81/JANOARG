@@ -44,15 +44,14 @@ namespace JANOARG.Client.Behaviors.Panels.Profile
             // SongName.text = entry.SongName;
             // SongArtist.text = entry.SongArtist;
             // ChartConstant.text = entry.ChartConstant;
-            if (entry.BadCount == 0)
+            if (entry.PerfectCount == entry.MaxCombo)
+            {
+                AllFlawlessIndicator.SetActive(true);
+            } else if (entry.BadCount == 0)
             {
                 FullStreakIndicator.SetActive(true);
             }
-            else if (entry.PerfectCount == entry.MaxCombo)
-            {
-                AllFlawlessIndicator.SetActive(true);
-            }
-
+            
             if (BrokenCount != null)
             {
                 BrokenCount.text = entry.BadCount.ToString();
