@@ -134,14 +134,15 @@ namespace ANOARG.Client.Behaviors.Panels
                         Name = "Close",
                         Icon = ProfileBar.sMain.ArrowLeftIcon,
                     }
-                },
-                new ModalAction[] {
-                    new () {
-                        Name = "Share",
-                        Icon = CameraIcon,
-                        // function
-                    }
                 }
+                // Sharing is not yet implement
+                // new ModalAction[] {
+                //     new () {
+                //         Name = "Share",
+                //         Icon = CameraIcon,
+                //         // function
+                //     }
+                // }
             );
 
             Panel.Close();

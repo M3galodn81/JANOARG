@@ -138,10 +138,7 @@ namespace JANOARG.Client.UI
         {
             ScrollRect.verticalNormalizedPosition = 1f;
 
-            // Get all score entrys from Score Store
             ScoreStoreEntries = StorageManager.sMain.Scores.GetBestEntries();
-
-            // Safety checks
             if (ScoreStoreEntries == null || RatingBreakdownEntries == null)
             {
                 Debug.LogError("ScoreStoreEntries or RatingBreakdownEntries is null.");
@@ -154,17 +151,12 @@ namespace JANOARG.Client.UI
                 yield return null;
             }
 
-            // Use the smaller count to avoid out-of-range errors
             int count = Mathf.Min(ScoreStoreEntries.Count, RatingBreakdownEntries.Count);
 
-            // Get all songs that are in the score entries
-
-            // Append a playable song to songlist if the key is match
             yield return StartCoroutine(BuildSongList());
          
             Dictionary<string, PlayableSong> songLookup = new Dictionary<string, PlayableSong>();
 
-            // Looping every rating breakdown entries to set their data
             for (int i = 0; i < count; i++)
             {
                 if (RatingBreakdownEntries[i] == null)
