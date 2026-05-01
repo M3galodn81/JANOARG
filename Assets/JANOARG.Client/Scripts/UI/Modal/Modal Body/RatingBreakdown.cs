@@ -132,6 +132,8 @@ namespace JANOARG.Client.UI
 
         private IEnumerator Start()
         {
+            ScrollRect.verticalNormalizedPosition = 1f;
+
             // Get all score entrys from Score Store
             ScoreStoreEntries = StorageManager.sMain.Scores.GetBestEntries();
 
@@ -157,7 +159,6 @@ namespace JANOARG.Client.UI
             yield return StartCoroutine(BuildSongList());
          
             Dictionary<string, PlayableSong> songLookup = new Dictionary<string, PlayableSong>();
-
 
             // Looping every rating breakdown entries to set their data
             for (int i = 0; i < count; i++)
@@ -211,7 +212,6 @@ namespace JANOARG.Client.UI
                     Debug.LogWarning($"Song not found: {entry.SongID}");
                 }
             }
-
         }
         
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using JANOARG.Client.Behaviors.Common;
+using JANOARG.Client.Behaviors.Panels;
 using JANOARG.Client.Data.Storage;
 using JANOARG.Client.UI.Modal;
 using JANOARG.Client.Utils;
@@ -30,6 +31,8 @@ namespace ANOARG.Client.Behaviors.Panels
         public TMP_Text UnlockedCount;
 
         public GameObject RatingBreakdownModalBody;
+        public Sprite CameraIcon;
+        public Panel Panel;
 
         public bool isAnimating { get; private set; }
 
@@ -134,8 +137,18 @@ namespace ANOARG.Client.Behaviors.Panels
                         Name = "Close",
                         Icon = ProfileBar.sMain.ArrowLeftIcon,
                     }
+                },
+                new ModalAction[] {
+                    new () {
+                        Name = "Share",
+                        Icon = CameraIcon,
+                        // function
+                    }
                 }
             );
+
+            Panel.Close();
+        
         }
 
         public Texture2D Screenshot(int width, int height)
