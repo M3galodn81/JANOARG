@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using System.IO;
 using UnityEngine.Playables;
 using System.Threading.Tasks;
+using JANOARG.Client.Data.Constant;
 
 namespace JANOARG.Client.UI
 {
@@ -165,20 +166,22 @@ namespace JANOARG.Client.UI
                 if (ScoreStoreEntries[i] == null)
                     continue;
 
-                var entry = ScoreStoreEntries[i];
+                var scoreEntry = ScoreStoreEntries[i];
+                var displayEntry = RatingBreakdownEntries[i];
 
-                RatingBreakdownEntries[i].SetData(entry);
+                displayEntry.SetData(scoreEntry);
 
-                if (SongDict != null && SongDict.TryGetValue(entry.SongID, out var song))
+                if (SongDict != null && SongDict.TryGetValue(scoreEntry.SongID, out var song))
                 {
-                    RatingBreakdownEntries[i].SongName.text = Truncate(song.SongName,30);
-                    RatingBreakdownEntries[i].SongArtist.text = Truncate(song.SongArtist,30);
-                    RatingBreakdownEntries[i].ChartConstant.text = song.Charts.Find(x => x.Target == entry.ChartID).DifficultyLevel.ToString();
+                    displayEntry.SongName.text = Truncate(song.SongName,30);
+                    displayEntry.SongArtist.text = Truncate(song.SongArtist,30);
+                    displayEntry.ChartConstant.text = song.Charts.Find(x => x.Target == scoreEntry.ChartID).DifficultyLevel.ToString();
+                    displayEntry.ChartConstant.color = CommonSys.sMain.Constants.GetDifficultyColor(scoreEntry.ChartIndex);
                     
                     Texture2D iconTex = null;
 
                     yield return StartCoroutine(
-                        GetIconImage(entry.SongID, (tex) =>
+                        GetIconImage(scoreEntry.SongID, (tex) =>
                         {
                             iconTex = tex;
                         })
@@ -186,13 +189,13 @@ namespace JANOARG.Client.UI
 
                     if (iconTex != null)
                     {
-                        RatingBreakdownEntries[i].Icon.texture = iconTex;
+                        displayEntry.Icon.texture = iconTex;
                     } 
 
                     Texture2D coverTex = null;
 
                     yield return StartCoroutine(
-                        GetCoverImage(song, entry.SongID, (tex) =>
+                        GetCoverImage(song, scoreEntry.SongID, (tex) =>
                         {
                             coverTex = tex;
                         })
@@ -200,16 +203,16 @@ namespace JANOARG.Client.UI
 
                     if (coverTex != null)
                     {
-                        RatingBreakdownEntries[i].BackgroundCover.texture = coverTex;
-                        RatingBreakdownEntries[i].BackgroundCover.color = Color.white;
+                        displayEntry.BackgroundCover.texture = coverTex;
+                        displayEntry.BackgroundCover.color = Color.white;
                     } else
                     {
-                        Debug.LogWarning($"Cover not found: {entry.SongID}");
+                        Debug.LogWarning($"Cover not found: {scoreEntry.SongID}");
                     }
                 }
                 else
                 {
-                    Debug.LogWarning($"Song not found: {entry.SongID}");
+                    Debug.LogWarning($"Song not found: {scoreEntry.SongID}");
                 }
             }
         }

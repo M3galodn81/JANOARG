@@ -41,9 +41,9 @@ namespace JANOARG.Client.Behaviors.Panels.Profile
             string[] parts = ratingText.Split('.');
             Rating.text = $"<b>{parts[0]}.</b><size=50%>{parts[1]}</size>";;
             BestScore.text = Helper.PadScore(entry.Score.ToString()) + "<size=50%><b>ppm";
-            // SongName.text = entry.SongName;
-            // SongArtist.text = entry.SongArtist;
-            // ChartConstant.text = entry.ChartConstant;
+
+            
+
             if (entry.PerfectCount == entry.MaxCombo)
             {
                 AllFlawlessIndicator.SetActive(true);
