@@ -15,6 +15,7 @@ namespace JANOARG.Client.UI
 {
     public class RatingBreakdownModalBody : MonoBehaviour
     {
+        public ScrollRect ScrollRect;
         public List<RatingBreakdownEntry> RatingBreakdownEntries;
 
         public List<ScoreStoreEntry> ScoreStoreEntries;
@@ -70,7 +71,6 @@ namespace JANOARG.Client.UI
 
                     PlayableSong playable = ((ExternalPlayableSong)req.asset).Data;
 
-                    // 🔥 FIX: store in dictionary
                     if (!dict.ContainsKey(song.ID))
                     {
                         dict.Add(song.ID, playable);
@@ -174,8 +174,8 @@ namespace JANOARG.Client.UI
 
                 if (SongDict != null && SongDict.TryGetValue(entry.SongID, out var song))
                 {
-                    RatingBreakdownEntries[i].SongName.text = song.SongName;
-                    RatingBreakdownEntries[i].SongArtist.text = song.SongArtist;
+                    RatingBreakdownEntries[i].SongName.text = Truncate(song.SongName,30);
+                    RatingBreakdownEntries[i].SongArtist.text = Truncate(song.SongArtist,30);
                     RatingBreakdownEntries[i].ChartConstant.text = song.Charts.Find(x => x.Target == entry.ChartID).DifficultyLevel.ToString();
                     
                     Texture2D iconTex = null;
@@ -214,5 +214,12 @@ namespace JANOARG.Client.UI
 
         }
         
+
+        string Truncate(string text, int maxLength)
+        {
+            return text.Length > maxLength
+                ? text.Substring(0, maxLength) + "..."
+                : text;
+        }
     }
 }
