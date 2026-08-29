@@ -275,6 +275,7 @@ namespace JANOARG.Client.Behaviors.Panels
                     SubtitleLabel.text = " > Gameplay";
                     SetScrollerWidth(360);
 
+                    #region Syncronization
                     Spawn<OptionCategoryTitle>("Syncronization");
 
                     var sample = GetOptionItemSample<FloatOptionInput>();
@@ -300,7 +301,9 @@ namespace JANOARG.Client.Behaviors.Panels
                         () => preferences.Get("PLYR:VisualOffset", 0f),
                         x => preferences.Set("PLYR:VisualOffset", x)
                     );
+                    #endregion
 
+                    #region Audio
                     Spawn<OptionCategoryTitle>("Audio");
 
                     sample.Min = 0;
@@ -327,7 +330,9 @@ namespace JANOARG.Client.Behaviors.Panels
                             "PLYR:HitsoundVolume", new[] { 60f }),
                         x => preferences.Set("PLYR:HitsoundVolume", x)
                     );
+                    #endregion
 
+                    #region  Visual
                     Spawn<OptionCategoryTitle>("Visual");
 
                     sample.Min = msample.Min = .2f;
@@ -355,7 +360,9 @@ namespace JANOARG.Client.Behaviors.Panels
                             UpdatePlayerPreview();
                         }
                     );
+                    #endregion
 
+                    #region  Miscellaneous
                     Spawn <OptionCategoryTitle>("Miscellaneous");
 
                     // Supposed to be a short
@@ -389,7 +396,13 @@ namespace JANOARG.Client.Behaviors.Panels
                         () => preferences.Get("PLYR:NoEarlyLateIndicator", false),
                         x => preferences.Set("PLYR:NoEarlyLateIndicator", x)
                     );
-                        
+
+                    Spawn<BooleanOptionInput, bool>(
+                        "Always show Hit VFX",
+                        () => preferences.Get("PLYR:AlwaysShowHitVFX", true),
+                        x => preferences.Set("PLYR:AlwaysShowHitVFX", x)
+                    );
+                    #endregion
                 }
 
                     break;

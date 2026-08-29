@@ -1287,8 +1287,10 @@ namespace JANOARG.Client.Behaviors.Player
 
         private void SpawnHitEffect(HitPlayer hitObject, float? accuracy)
         {
+            Color hitColor = sCurrentChart.Palette.InterfaceColor;
+            if (Settings.AlwaysShowHitVFX) hitColor.a = 1f; 
             sr_SpawnHitEffect.Begin();
-            var effect = sMain.JudgeScreenManager.BorrowEffect(hitObject, accuracy, sCurrentChart.Palette.InterfaceColor);
+            var effect = sMain.JudgeScreenManager.BorrowEffect(hitObject, accuracy, hitColor);
             var rt = (RectTransform)effect.transform;
             rt.position = hitObject.HitCoord.Position;
             sr_SpawnHitEffect.End();
@@ -1443,6 +1445,7 @@ namespace JANOARG.Client.Behaviors.Player
         public bool  ShowFlawlessText;
         public bool  NoEarlyLateText;
         public bool  HighlightSimulNotes;
+        public bool  AlwaysShowHitVFX;
 
 
         public PlayerSettings()
@@ -1452,6 +1455,7 @@ namespace JANOARG.Client.Behaviors.Player
             if (prefs == null) return;
             HighlightSimulNotes = CommonSys.sMain.Preferences.Get("PLYR:HighlightSimulNotes", true);
             ShowFlawlessText= CommonSys.sMain.Preferences.Get("PLYR:JudgementTextOnFlawless", true);
+            AlwaysShowHitVFX = CommonSys.sMain.Preferences.Get("PLYR:AlwaysShowHitVFX", true);
             NoEarlyLateText = CommonSys.sMain.Preferences.Get("PLYR:NoEarlyLateIndicator", false);
             ShowValueText = short.Parse(CommonSys.sMain.Preferences.Get("PLYR:ShowOffset", "1"));
             
