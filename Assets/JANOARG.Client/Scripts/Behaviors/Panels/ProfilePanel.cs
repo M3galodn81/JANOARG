@@ -29,12 +29,14 @@ namespace JANOARG.Client.Behaviors.Panels
         public Sprite CameraIcon;
         public Panel Panel;
 
+        private int _CurrentDifficulty = 5;
+
         public void Awake()
         {
             Storage storage = CommonSys.sMain.Storage;
 
             PlayerName.text = storage.Get("INFO:Name", "JANOARG");
-            PlayerTitle.text = storage.Get("INFO:PlayerTitle", "Perfectly Generic Player");
+            // PlayerTitle.text = storage.Get("INFO:PlayerTitle", "Perfectly Generic Player");
             
             // TODO: Leveling Stuff
             int level = CommonSys.sMain.Storage.Get("INFO:Level", 1);
