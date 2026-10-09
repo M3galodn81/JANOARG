@@ -449,6 +449,12 @@ namespace JANOARG.Client.Behaviors.Panels
                         x => preferences.Set("PLYR:NoEarlyLateIndicator", x)
                     );
 
+                    Spawn<BooleanOptionInput, bool>(
+                        "Show streak indicator",
+                        () => preferences.Get("PLYR:ShowStreakIndicator", true),
+                        x => preferences.Set("PLYR:ShowStreakIndicator", x)
+                    );
+
                     #endregion
 
                     #region  Miscellaneous
