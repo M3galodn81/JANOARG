@@ -15,5 +15,10 @@ namespace JANOARG.Client.Data.Story.Instructions
         {
             yield return null;
         }
+
+        public virtual IEnumerator OnSceneSet(Storyteller teller)
+        {
+            yield return null;
+        }
     }
 }

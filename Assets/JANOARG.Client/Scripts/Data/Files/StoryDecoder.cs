@@ -21,6 +21,13 @@ namespace JANOARG.Client.Data.Files
 
         private static readonly Regex sr_ActorParseRegex =
             new(@"^(?<actor>(?:[0-9a-zA-Z]+\s,\s)*[0-9a-zA-Z]+)\s*::\s+(?<content>.*)");
+        private static readonly Regex StoryTagRegex = new(
+            @"^\[(?<tag>\w+)\((?<arguments>.*)\)\]"
+        );
+
+        private static readonly Regex ArgumentRegex = new(
+            @"[^,]+"
+        );
 
 #if UNITY_EDITOR
         [DidReloadScripts]
@@ -78,6 +85,33 @@ namespace JANOARG.Client.Data.Files
                 // Skip if comment
                 if (line.StartsWith("#")) continue;
 
+                // Parse Scene Setting 
+                // BackgroundSet :: BackgroundID
+                if (line.StartsWith("BackgroundSet"))
+                {
+                    Debug.Log($"Line {line} in BackgroundSet");
+                    Match match;
+                    Regex separator = new(@"(?<action>.+?)\s*::\s*(?<content>.+)");
+                    if ((match = separator.Match(line)).Success)
+                    {
+                        BackgroundSetStoryInstruction backgroundSetIns =
+                         new BackgroundSetStoryInstruction(match.Groups["content"].ToString());
+                        Debug.Log($"'{match.Groups["content"]}' is the Id");
+                        currentChunk.Instructions.Add(backgroundSetIns);
+                    }
+                    continue;
+                }
+
+                // MusicSet :: MusicID
+                if (line.StartsWith("#")) continue;
+
+                // PlaceSet :: Text
+                if (line.StartsWith("#")) continue;
+
+                // TimeDateSet :: 16-06-3280, 12:45AM
+                if (line.StartsWith("#")) continue;
+
+
                 // Check if there is a Actor 
                 if (currentChunk.Instructions.Count == 0)
                 {
@@ -97,99 +131,71 @@ namespace JANOARG.Client.Data.Files
                     }
                 }
 
-                // Skip white space
+                // Skip whitespace
                 while (index < line.Length && char.IsWhiteSpace(line[index])) index++;
 
+                // Parse text and control tags
                 while (index < line.Length)
                 {
-                    StringBuilder storyboard;
-
                     // Parse control tags
                     if (line[index] == '[')
                     {
-                        storyboard = new StringBuilder();
-                        index++;
+                        Match match = StoryTagRegex.Match(line.Substring(index));
 
-                        while (index < line.Length && char.IsLetterOrDigit(line[index]))
+                        if (!match.Success)
                         {
-                            storyboard.Append(line[index]);
+                            Debug.LogWarning($"Invalid story tag format: {line}");
                             index++;
-                        }
-
-                        var keyword = storyboard.ToString();
-
-                        if (!s_StoryTags.ContainsKey(keyword))
-                        {
-                            Debug.LogWarning($"Unknown story tag \"{keyword}\"");
-                            while (index < line.Length && line[index] != ']') index++;
-                            index++;
-
                             continue;
                         }
 
-                        StoryTagInfo tagInfo = s_StoryTags[keyword];
-                        ParameterInfo[] parameters = tagInfo.Constructor.GetParameters();
+                        string keyword = match.Groups["tag"].Value;
+                        string arguments = match.Groups["arguments"].Value;
 
-                        List<string> stringParams = new();
-
-                        // Parse parameters
-                        foreach (ParameterInfo param in parameters)
+                        if (!s_StoryTags.TryGetValue(keyword, out StoryTagInfo tagInfo))
                         {
-                            while (index < line.Length && char.IsWhiteSpace(line[index])) index++;
-                            storyboard = new StringBuilder();
-
-                            if (line[index] is '"' or '\'')
-                            {
-                                char bound = line[index];
-                                index++;
-
-                                while (index < line.Length && line[index] != bound)
-                                {
-                                    if (line[index] == '\\') index++;
-                                    storyboard.Append(line[index]);
-                                    index++;
-                                }
-                            }
-                            else
-                            {
-                                while (index < line.Length && !char.IsWhiteSpace(line[index]) && line[index] != ']')
-                                {
-                                    storyboard.Append(line[index]);
-                                    index++;
-                                }
-                            }
-
-                            // Debug.Log($"Param \"{param.Name}\": \"{storyboard}\"");
-                            stringParams.Add(storyboard.ToString());
-                            index++;
+                            Debug.LogWarning($"Unknown story tag \"{keyword}\"");
+                            index += match.Length;
+                            continue;
                         }
 
-                        // Debug.Log(string.Join(", ", stringParams));
+                        ParameterInfo[] parameters = tagInfo.Constructor.GetParameters();
+                        List<string> stringParams = new();
+
+                        foreach (Match argMatch in ArgumentRegex.Matches(arguments))
+                        {
+                            stringParams.Add(argMatch.Value.Trim());
+                        }
+
+                        if (stringParams.Count != parameters.Length)
+                        {
+                            Debug.LogWarning(
+                                $"Tag \"{keyword}\" expects {parameters.Length} arguments, " +
+                                $"but received {stringParams.Count}."
+                            );
+
+                            index += match.Length;
+                            continue;
+                        }
 
                         currentChunk.Instructions.Add(
-                            (StoryInstruction)tagInfo.Constructor.Invoke(
-                                stringParams
-                                    .ToArray())
+                            (StoryInstruction)tagInfo.Constructor.Invoke(stringParams.ToArray())
                         );
+
+                        index += match.Length;
                     }
 
-                    // Parse text
+                    // Parse ordinary text
                     else
                     {
-                        storyboard = new StringBuilder();
+                        StringBuilder storyboard = new();
 
                         while (index < line.Length && line[index] != '[')
                         {
-                            if (line[index] == '\\')
-                            {
+                            if (line[index] == '\\' && index + 1 < line.Length)
                                 index++;
-                                storyboard.Append(line[index]);
-                            }
-                            else
-                            {
-                                storyboard.Append(line[index]);
-                            }
 
+                            storyboard.Append(line[index]);
                             index++;
                         }
 
@@ -202,12 +208,12 @@ namespace JANOARG.Client.Data.Files
                     }
                 }
             }
-
             if (currentChunk.Instructions.Count == 0) script.Chunks.Remove(currentChunk);
 
             return script;
         }
     }
+
 
     [AttributeUsage(AttributeTargets.Constructor)]
     public class StoryTagAttribute : Attribute

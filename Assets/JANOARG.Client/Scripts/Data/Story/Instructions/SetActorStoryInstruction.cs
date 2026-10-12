@@ -17,9 +17,9 @@ namespace JANOARG.Client.Data.Story.Instructions
         {
             if (Actors.Count == 0)
             {
-                ActorInfo narrator = teller.Constants.Actors.Find(x => string.IsNullOrEmpty(x.Alias));
+                // ActorInfo narrator = teller.Constants.Actors.Find(x => string.IsNullOrEmpty(x.Alias));
                 teller.SetNameLabelText("");
-                teller.DialogueLabel.text += narrator.TextPrefix;
+                // teller.DialogueLabel.text += narrator.TextPrefix;
             }
             else if (Actors.Count == 1)
             {
