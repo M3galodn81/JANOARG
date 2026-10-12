@@ -8,6 +8,8 @@ namespace JANOARG.Client.Data.Constant
     public class StoryConstants : ScriptableObject
     {
         public List<ActorInfo> Actors;
+        public StoryAudioConstants MainStoryAudioConstant;
+        public StoryBackgroundConstants MainStoryBackgroundConstant;
     }
 
     [Serializable]

@@ -153,12 +153,19 @@ namespace JANOARG.Client.Behaviors.Storyteller
             IsMeshDirty = true;
             ResetDialogueMesh();
 
-            // Instructions
+            // Text Instructions
             foreach (StoryInstruction instruction in chunk.Instructions)
             {
                 IEnumerator chunkRoutine = instruction.OnTextReveal(this);
 
                 if (chunkRoutine != null) yield return chunkRoutine;
+            }
+
+            // Scene Instructions
+            foreach (StoryInstruction ins in chunk.Instructions)
+            {
+                IEnumerator crt = ins.OnSceneSet(this);
+                if (crt != null) yield return crt;
             }
 
             yield return new WaitWhile(() => ActiveCoroutines > 0);
@@ -253,5 +260,11 @@ namespace JANOARG.Client.Behaviors.Storyteller
             });
             StartCoroutine(_CurrentNameFieldRoutine);
         }
+    
+        public void GetBackground()
+        {
+            
+        }
+    
     }
 }
