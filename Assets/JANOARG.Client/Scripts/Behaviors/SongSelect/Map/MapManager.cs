@@ -10,6 +10,7 @@ using JANOARG.Client.Data.Playlist;
 using JANOARG.Shared.Data.ChartInfo;
 using JANOARG.Shared.Utils.Animation;
 using JANOARG.Shared.Utils;
+using JANOARG.Client.Behaviors.Storyteller;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -29,6 +30,10 @@ namespace JANOARG.Client.Behaviors.SongSelect.Map
         public static Dictionary<string, SongMapItemUI> sSongMapItemUIsByID = new();
         public static Dictionary<string, PlaylistMapItem> sPlaylistMapItemsByID = new();
         public static Dictionary<string, PlaylistMapItemUI> sPlaylistMapItemUIsByID = new();
+
+        public static Dictionary<string, StoryMapItem> sStoryMapItemsByID = new();
+        public static Dictionary<string, StoryMapItemUI> sStoryMapItemUIsByID = new();
+
         public static Dictionary<MapItem, HashSet<MapProp>> sPropsByDependency = new();
 
 
@@ -350,6 +355,16 @@ namespace JANOARG.Client.Behaviors.SongSelect.Map
             isPointerDown = false;
             if (SongSelectScreen.sMain.TargetSongAnim != null) StopCoroutine(SongSelectScreen.sMain.TargetSongAnim);
             SongSelectScreen.sMain.TargetSongAnim = StartCoroutine(SongSelectScreen.sMain.MapTargetSongShowAnim(item));
+        }
+
+        public void LoadStory(StoryMapItem item)
+        {
+            isPointerDown = false;
+            Debug.Log($"{item.TargetStory.name}");
+            // SceneManager.LoadScene("Storyteller");
+            CommonSys.Load("Storyteller", null, null,showBar: false);
+            // StorytellerScreen.sMain.ScriptToPlay = ;
+            Storyteller.Storyteller.sMain.PlayScript(item.TargetStory);
         }
     }
 }

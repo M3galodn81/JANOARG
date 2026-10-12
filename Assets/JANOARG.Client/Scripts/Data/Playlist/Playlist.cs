@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JANOARG.Client.Data.Story;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -17,6 +18,7 @@ namespace JANOARG.Client.Data.Playlist
         [FormerlySerializedAs("Items")]
         public PlaylistSong[] Songs;
         public PlaylistReference[] Playlists;
+        public PlaylistStory[] Stories;
         [Header("Background Music")]
         public AudioClip BackgroundMusicInit;
         public AudioClip BackgroundMusicLoop;
@@ -34,6 +36,16 @@ namespace JANOARG.Client.Data.Playlist
     }
 
     [Serializable]
+    public class PlaylistStory
+    {
+        public StoryScript ID;
+        [SerializeReference]
+        public GameConditional[] RevealConditions;
+        [SerializeReference]
+        public GameConditional[] UnlockConditions;
+    }
+
+    [Serializable]
     public class PlaylistReference
     {
         public Playlist Playlist;
@@ -44,4 +56,5 @@ namespace JANOARG.Client.Data.Playlist
     }
 
     public class JAPSPickerAttribute : PropertyAttribute { }
+    public class StoryPickerAttribute : PropertyAttribute { }
 }
