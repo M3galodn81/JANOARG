@@ -63,6 +63,7 @@ namespace JANOARG.Client.Data.Files
             {
                 var index = 0;
 
+                // Skip if line is null and empty
                 if (string.IsNullOrEmpty(line))
                 {
                     if (currentChunk.Instructions.Count > 0)
@@ -74,18 +75,22 @@ namespace JANOARG.Client.Data.Files
                     continue;
                 }
 
+                // Skip if comment
                 if (line.StartsWith("#")) continue;
 
+                // Check if there is a Actor 
                 if (currentChunk.Instructions.Count == 0)
                 {
                     Match match;
                     SetActorStoryInstruction authorIns = new();
                     currentChunk.Instructions.Add(authorIns);
-
+                    Debug.Log($"Checking if line {line} has actors");
+                    // Regex
                     if ((match = sr_ActorParseRegex.Match(line)).Success)
                     {
                         index = match.Groups["content"].Index;
-
+                        Debug.Log($"{match.Groups["actor"]} in Decoder");
+                        // Split actor if there is a comma
                         authorIns.Actors.AddRange(
                             match.Groups["actor"]
                                 .Value.Split(','));
@@ -154,12 +159,12 @@ namespace JANOARG.Client.Data.Files
                                 }
                             }
 
-                            Debug.Log($"Param \"{param.Name}\": \"{storyboard}\"");
+                            // Debug.Log($"Param \"{param.Name}\": \"{storyboard}\"");
                             stringParams.Add(storyboard.ToString());
                             index++;
                         }
 
-                        Debug.Log(string.Join(", ", stringParams));
+                        // Debug.Log(string.Join(", ", stringParams));
 
                         currentChunk.Instructions.Add(
                             (StoryInstruction)tagInfo.Constructor.Invoke(

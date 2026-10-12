@@ -136,10 +136,12 @@ namespace JANOARG.Client.Behaviors.Storyteller
                 DialogueLabel.rectTransform.anchoredPosition = dialoguePos + EaseUtils.FromZero(5, x, EaseFunction.Cubic, EaseMode.In) * Vector2.down;
             });
 
+            // Reset Dialog Label
             DialogueLabel.text = "";
             DialogueLabel.color = Color.white;
             DialogueLabel.rectTransform.anchoredPosition = dialoguePos;
 
+            // Filling Up the Text
             foreach (StoryInstruction instruction in chunk.Instructions)
                 instruction.OnTextBuild(this);
 
@@ -151,6 +153,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
             IsMeshDirty = true;
             ResetDialogueMesh();
 
+            // Instructions
             foreach (StoryInstruction instruction in chunk.Instructions)
             {
                 IEnumerator chunkRoutine = instruction.OnTextReveal(this);

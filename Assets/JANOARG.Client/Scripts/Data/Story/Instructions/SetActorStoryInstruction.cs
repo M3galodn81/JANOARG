@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+// using System.Diagnostics;
 using JANOARG.Client.Behaviors.Storyteller;
 using JANOARG.Client.Data.Constant;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace JANOARG.Client.Data.Story.Instructions
 {
@@ -23,6 +26,16 @@ namespace JANOARG.Client.Data.Story.Instructions
                 ActorInfo actor = teller.Constants.Actors.Find(x => x.Alias == Actors[0]);
                 teller.SetNameLabelText(actor.Name);
                 teller.DialogueLabel.text += actor.TextPrefix;
+            } 
+            else 
+            {
+                List<string> aliases = new();
+                foreach (string a in Actors)
+                {
+                    ActorInfo actor = teller.Constants.Actors.Find(x => x.Alias == a);
+                    aliases.Add(actor.Name);
+                }
+                teller.SetNameLabelText(string.Join(", ", aliases));
             }
         }
     }
