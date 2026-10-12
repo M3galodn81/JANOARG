@@ -22,7 +22,7 @@ namespace JANOARG.Client.Data.Files
         private static readonly Regex sr_ActorParseRegex =
             new(@"^(?<actor>(?:[0-9a-zA-Z]+\s,\s)*[0-9a-zA-Z]+)\s*::\s+(?<content>.*)");
         private static readonly Regex StoryTagRegex = new(
-            @"^\[(?<tag>\w+)\((?<arguments>.*)\)\]"
+            @"^\[(?<tag>\w+)\((?<arguments>.*?)\)\]"
         );
 
         private static readonly Regex ArgumentRegex = new(
@@ -142,63 +142,70 @@ namespace JANOARG.Client.Data.Files
                     {
                         Match match = StoryTagRegex.Match(line.Substring(index));
 
-                        if (!match.Success)
+                        if (match.Success)
                         {
-                            Debug.LogWarning($"Invalid story tag format: {line}");
-                            index++;
-                            continue;
-                        }
+                            string keyword = match.Groups["tag"].Value;
+                            string arguments = match.Groups["arguments"].Value;
 
-                        string keyword = match.Groups["tag"].Value;
-                        string arguments = match.Groups["arguments"].Value;
+                            if (!s_StoryTags.TryGetValue(keyword, out StoryTagInfo tagInfo))
+                            {
+                                Debug.LogWarning($"Unknown story tag \"{keyword}\"");
+                                index += match.Length;
+                                continue;
+                            }
 
-                        if (!s_StoryTags.TryGetValue(keyword, out StoryTagInfo tagInfo))
-                        {
-                            Debug.LogWarning($"Unknown story tag \"{keyword}\"");
-                            index += match.Length;
-                            continue;
-                        }
+                            ParameterInfo[] parameters = tagInfo.Constructor.GetParameters();
+                            List<string> stringParams = new();
 
-                        ParameterInfo[] parameters = tagInfo.Constructor.GetParameters();
-                        List<string> stringParams = new();
+                            foreach (Match argMatch in ArgumentRegex.Matches(arguments))
+                            {
+                                stringParams.Add(argMatch.Value.Trim());
+                            }
 
-                        foreach (Match argMatch in ArgumentRegex.Matches(arguments))
-                        {
-                            stringParams.Add(argMatch.Value.Trim());
-                        }
+                            if (stringParams.Count != parameters.Length)
+                            {
+                                Debug.LogWarning(
+                                    $"Tag \"{keyword}\" expects {parameters.Length} arguments, " +
+                                    $"but received {stringParams.Count}. {String.Join(",",stringParams)}"
+                                );
 
-                        if (stringParams.Count != parameters.Length)
-                        {
-                            Debug.LogWarning(
-                                $"Tag \"{keyword}\" expects {parameters.Length} arguments, " +
-                                $"but received {stringParams.Count}."
+                                index += match.Length;
+                                continue;
+                            }
+
+                            currentChunk.Instructions.Add(
+                                (StoryInstruction)tagInfo.Constructor.Invoke(stringParams.ToArray())
                             );
 
                             index += match.Length;
                             continue;
-                        }
+                        } 
 
-                        currentChunk.Instructions.Add(
-                            (StoryInstruction)tagInfo.Constructor.Invoke(stringParams.ToArray())
-                        );
-
-                        index += match.Length;
+                        // Debug.LogWarning($"Invalid story tag format: {line}");
+                        // index++;
+                        
                     }
 
                     // Parse ordinary text
-                    else
+                    StringBuilder storyboard = new();
+
+                    while (index < line.Length && line[index] != '[')
                     {
-                        StringBuilder storyboard = new();
-
-                        while (index < line.Length && line[index] != '[')
-                        {
-                            if (line[index] == '\\' && index + 1 < line.Length)
-                                index++;
-
-                            storyboard.Append(line[index]);
+                        if (line[index] == '\\' && index + 1 < line.Length)
                             index++;
-                        }
 
+                        storyboard.Append(line[index]);
+                        index++;
+                    }
+
+                    if (index < line.Length && line[index] == '[' && storyboard.Length == 0)
+                    {
+                        storyboard.Append(line[index]);
+                        index++;
+                    }
+
+                    if (storyboard.Length > 0)
+                    {
                         currentChunk.Instructions.Add(
                             new TextPrintStoryInstruction
                             {
