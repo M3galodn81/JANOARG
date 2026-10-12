@@ -29,7 +29,7 @@ namespace JANOARG.Client.Data.Story.Instructions
             } 
             else 
             {
-                List<string> aliases = new();
+                List<string> aliases = new List<string>();
                 foreach (string a in Actors)
                 {
                     ActorInfo actor = teller.Constants.Actors.Find(x => x.Alias == a);

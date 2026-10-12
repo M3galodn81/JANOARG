@@ -20,7 +20,7 @@ namespace JANOARG.Client.Data.Files
         private static Dictionary<string, StoryTagInfo> s_StoryTags;
 
         private static readonly Regex sr_ActorParseRegex =
-            new(@"^(?<actor>(?:[0-9a-zA-Z]+,)*[0-9a-zA-Z]+)\s*>\s+(?<content>.*)");
+            new(@"^(?<actor>(?:[0-9a-zA-Z]+\s,\s)*[0-9a-zA-Z]+)\s*::\s+(?<content>.*)");
 
 #if UNITY_EDITOR
         [DidReloadScripts]
@@ -93,7 +93,7 @@ namespace JANOARG.Client.Data.Files
                         // Split actor if there is a comma
                         authorIns.Actors.AddRange(
                             match.Groups["actor"]
-                                .Value.Split(','));
+                                .Value.Split(" , "));
                     }
                 }
 
