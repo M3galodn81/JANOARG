@@ -18,6 +18,7 @@ namespace JANOARG.Client.Data.Story.Instructions
             if (Actors.Any(a => string.Equals(a, "ALL", StringComparison.OrdinalIgnoreCase)))
             {
                 teller.SetNameLabelText("ALL");
+                teller.DialogueLabel.text += "<alpha=#cc>";
             }
             else if (Actors.Count == 0)
             {
