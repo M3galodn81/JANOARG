@@ -117,7 +117,13 @@ namespace JANOARG.Client.Behaviors.Storyteller
         public void PlayNextChunk()
         {
             CurrentChunkIndex++;
-            StartCoroutine(PlayChunk());
+            if (CurrentScript.Chunks.Count > CurrentChunkIndex)
+            {
+                StartCoroutine(PlayChunk()); 
+            } else
+            {
+                Debug.Log($"END OF STORY");
+            }
         }
 
         public IEnumerator PlayChunk()

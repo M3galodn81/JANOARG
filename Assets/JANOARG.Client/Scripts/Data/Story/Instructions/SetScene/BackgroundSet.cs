@@ -58,7 +58,6 @@ namespace JANOARG.Client.Data.Story.Instructions
                 else
                 {
                     teller.BackgroundImage.sprite = bg;
-                    Debug.Log($"{Id} on IEnumerator OnSceneSet is set");
                 }
             }
 
@@ -68,7 +67,6 @@ namespace JANOARG.Client.Data.Story.Instructions
                 float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
                 teller.BackgroundImage.color = new Color(1f, 1f, 1f, lerp);
             });
-            Debug.Log($" IEnumerator OnSceneSet is finished");
         }
     }
 }
