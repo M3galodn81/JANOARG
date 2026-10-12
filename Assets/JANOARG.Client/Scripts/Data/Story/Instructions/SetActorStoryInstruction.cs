@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-// using System.Diagnostics;
+using System.Linq;
 using JANOARG.Client.Behaviors.Storyteller;
 using JANOARG.Client.Data.Constant;
 using UnityEngine;
@@ -15,13 +15,16 @@ namespace JANOARG.Client.Data.Story.Instructions
 
         public override void OnTextBuild(Storyteller teller)
         {
-            if (Actors.Count == 0)
+            if (Actors.Any(a => string.Equals(a, "ALL", StringComparison.OrdinalIgnoreCase)))
+            {
+                teller.SetNameLabelText("ALL");
+            }
+            else if (Actors.Count == 0)
             {
                 // ActorInfo narrator = teller.Constants.Actors.Find(x => string.IsNullOrEmpty(x.Alias));
                 teller.SetNameLabelText("");
                 // teller.DialogueLabel.text += narrator.TextPrefix;
-            }
-            else if (Actors.Count == 1)
+            } else if (Actors.Count == 1)
             {
                 ActorInfo actor = teller.Constants.Actors.Find(x => x.Alias == Actors[0]);
                 teller.SetNameLabelText(actor.Name);
