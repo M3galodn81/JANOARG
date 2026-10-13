@@ -833,6 +833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _StageRoot: {fileID: 1220507274}
+  CanvasGroup: {fileID: 1220507275}
   _ActorPrefab: {fileID: 7460308466082660732, guid: eb627edf4882e6943963aee5beb76963, type: 3}
   _ActorConstants: {fileID: 11400000, guid: 1d3569d05a9155f418f5c7f3f7979469, type: 2}
   _LeftPoint: {fileID: 645328595}
@@ -2036,7 +2037,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6391826254ae16b398dac6dafeb7a772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScriptToPlay: {fileID: 5022602860645237092, guid: e8d13fd44a928a84fb2882d6823c2dcc, type: 3}
+  ScriptToPlay: {fileID: 5022602860645237092, guid: 378d56d9355aa71dd9862ceec1886561, type: 3}
 --- !u!1 &1571401274
 GameObject:
   m_ObjectHideFlags: 0
