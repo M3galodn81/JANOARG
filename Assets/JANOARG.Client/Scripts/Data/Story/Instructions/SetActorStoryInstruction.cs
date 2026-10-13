@@ -27,7 +27,7 @@ namespace JANOARG.Client.Data.Story.Instructions
                 // teller.DialogueLabel.text += narrator.TextPrefix;
             } else if (Actors.Count == 1)
             {
-                ActorInfo actor = teller.Constants.Actors.Find(x => x.Alias == Actors[0]);
+                ActorInfo actor = teller.Constants.MainStoryActorConstant.GetActor(Actors[0]);
                 teller.SetNameLabelText(actor.Name);
                 teller.DialogueLabel.text += actor.TextPrefix;
             } 
@@ -36,7 +36,7 @@ namespace JANOARG.Client.Data.Story.Instructions
                 List<string> aliases = new List<string>();
                 foreach (string a in Actors)
                 {
-                    ActorInfo actor = teller.Constants.Actors.Find(x => x.Alias == a);
+                    ActorInfo actor = teller.Constants.MainStoryActorConstant.GetActor(a);
                     aliases.Add(actor.Name);
                 }
                 teller.SetNameLabelText(string.Join(", ", aliases));

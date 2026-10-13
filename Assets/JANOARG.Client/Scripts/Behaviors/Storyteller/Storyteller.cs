@@ -35,7 +35,8 @@ namespace JANOARG.Client.Behaviors.Storyteller
         [Space]
         public TMP_Text PlaceText;
         public TMP_Text TimeText;
-
+        
+        public StoryActorStage ActorStage;
         public Image BackgroundImage;
 
         public CanvasGroup FullScreenNarrationGroup;
@@ -46,16 +47,12 @@ namespace JANOARG.Client.Behaviors.Storyteller
         [NonSerialized] public float MaxVolume;
 
         public RectTransform ActorHolder;
-        // public ActorSpriteHandler ActorSpriteItem;
-        // public List<ActorSpriteHandler> Actors;
-        // public List<ActorInfo> CurrentActors = new List<ActorInfo>();
-        // public float ActorSpriteBounceValue;
 
         // public List<DecisionItem> CurrentDecisionItems = new List<DecisionItem>();
         // public List<DecisionItem> CurrentFlagChecks = new List<DecisionItem>();
-        public bool AreConditionsMet = false;
-        public GameObject DecisionHolder;
-        public GameObject DecisionItemPrefab;
+        // public bool AreConditionsMet = false;
+        // public GameObject DecisionHolder;
+        // public GameObject DecisionItemPrefab;
 
         [Space]
         public float CharacterDuration = 0.01f;

@@ -7,7 +7,7 @@ namespace JANOARG.Client.Data.Constant
     [CreateAssetMenu(fileName = "Story Background Constants", menuName = "JANOARG/Story/Story Background Constants")]
     public class StoryBackgroundConstants : ScriptableObject
     {
-        public Background[] BackgroundList;
+        public BackgroundInfo[] BackgroundList;
         public StoryBackgroundReference[] StoryBackgrounds;
 
         private Dictionary<string, Sprite> _BackgroundLookup;
@@ -38,7 +38,7 @@ namespace JANOARG.Client.Data.Constant
 
             if (constants.BackgroundList != null)
             {
-                foreach (Background background in constants.BackgroundList)
+                foreach (BackgroundInfo background in constants.BackgroundList)
                 {
                     if (background == null ||
                         string.IsNullOrEmpty(background.ID))
@@ -69,7 +69,7 @@ namespace JANOARG.Client.Data.Constant
     }
 
     [Serializable]
-    public class Background
+    public class BackgroundInfo
     {
         public string ID;
         public Sprite Sprite;

@@ -32,11 +32,22 @@ namespace JANOARG.Client.Data.Story.Instructions
         public override IEnumerator OnSceneSet(Storyteller teller)
         {
             Debug.Log($"{Id} on IEnumerator OnSceneSet");
-            yield return Ease.Animate(Duration, (a) =>
+            if (teller.BackgroundImage.sprite == null)
             {
-                float lerp = Ease.Get(1 - a, EaseFunction.Cubic, EaseMode.Out);
-                teller.BackgroundImage.color = new Color(1f, 1f, 1f, lerp);
-            });
+                yield return Ease.Animate(Duration, (a) =>
+                {
+                    float lerp = Ease.Get(1 - a, EaseFunction.Cubic, EaseMode.Out);
+                    teller.BackgroundImage.color = new Color(0f, 0f, 0f, lerp);
+                });
+            } else
+            {
+                yield return Ease.Animate(Duration, (a) =>
+                {
+                    float lerp = Ease.Get(1 - a, EaseFunction.Cubic, EaseMode.Out);
+                    teller.BackgroundImage.color = new Color(1f, 1f, 1f, lerp);
+                });
+            }
+            
 
             // Change Background
             if (teller.Constants.MainStoryBackgroundConstant == null)
