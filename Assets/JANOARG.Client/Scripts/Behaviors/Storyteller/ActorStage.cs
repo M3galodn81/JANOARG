@@ -12,6 +12,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
     {
         [Header("References")]
         [SerializeField] private RectTransform _StageRoot;
+        [SerializeField] private CanvasGroup _CanvasGroup;
         [SerializeField] private Image _ActorPrefab;
         [SerializeField] private StoryActorConstants _ActorConstants;
 
@@ -211,6 +212,24 @@ namespace JANOARG.Client.Behaviors.Storyteller
         {
             if (_Actors.TryGetValue(alias, out Image image))
                 image.transform.SetAsFirstSibling();
+        }
+    
+        public IEnumerator HideAllActors()
+        {
+            yield return Ease.Animate(1, (a) =>
+            {
+                float lerp = Ease.Get(1-a, EaseFunction.Cubic, EaseMode.Out);
+                _CanvasGroup.alpha = 1 * lerp;
+            });
+        }
+
+        public IEnumerator ShowAllActors()
+        {
+            yield return Ease.Animate(1, (a) =>
+            {
+                float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
+                _CanvasGroup.alpha = 1 * lerp;
+            });
         }
     }
     public enum ActorPosition

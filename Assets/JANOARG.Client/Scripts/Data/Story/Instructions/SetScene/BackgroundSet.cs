@@ -31,6 +31,7 @@ namespace JANOARG.Client.Data.Story.Instructions
         // Scene
         public override IEnumerator OnSceneSet(Storyteller teller)
         {
+            yield return teller.ActorStage.HideAllActors();
             // If no background set to iamge color black
             yield return Ease.Animate(Duration, (a) =>
             {
@@ -71,6 +72,7 @@ namespace JANOARG.Client.Data.Story.Instructions
                 float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
                 teller.BackgroundImage.color = new Color(1f, 1f, 1f, lerp);
             });
+            yield return teller.ActorStage.ShowAllActors();
         }
     }
 }
