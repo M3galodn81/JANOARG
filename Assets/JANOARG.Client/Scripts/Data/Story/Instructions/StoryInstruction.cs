@@ -20,5 +20,10 @@ namespace JANOARG.Client.Data.Story.Instructions
         {
             yield return null;
         }
+
+        public virtual IEnumerator OnActorAction(Storyteller teller)
+        {
+            yield return null;
+        }
     }
 }

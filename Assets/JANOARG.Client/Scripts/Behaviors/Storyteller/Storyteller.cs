@@ -144,7 +144,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
             DialogueLabel.color = Color.white;
             DialogueLabel.rectTransform.anchoredPosition = dialoguePos;
 
-            // Filling Up the Text
+            // Setting up Scene
             foreach (StoryInstruction instruction in chunk.Instructions)
                 instruction.OnTextBuild(this);
 
@@ -156,11 +156,17 @@ namespace JANOARG.Client.Behaviors.Storyteller
             IsMeshDirty = true;
             ResetDialogueMesh();
 
+            // Character Instructions
+            foreach (StoryInstruction instruction in chunk.Instructions)
+            {
+                IEnumerator chunkRoutine = instruction.OnActorAction(this);
+                if (chunkRoutine != null) yield return chunkRoutine;
+            }
+
             // Text Instructions
             foreach (StoryInstruction instruction in chunk.Instructions)
             {
                 IEnumerator chunkRoutine = instruction.OnTextReveal(this);
-
                 if (chunkRoutine != null) yield return chunkRoutine;
             }
 
@@ -210,9 +216,14 @@ namespace JANOARG.Client.Behaviors.Storyteller
             {
                 ActiveCoroutines++;
 
-                yield return routine;
-
-                ActiveCoroutines--;
+                try
+                {
+                    yield return routine;
+                }
+                finally
+                {
+                    ActiveCoroutines--;
+                }
             }
 
             StartCoroutine(f_registration());

@@ -100,11 +100,18 @@ namespace JANOARG.Client.Behaviors.Storyteller
             if (bringToFront)
                 image.transform.SetAsLastSibling();
 
-            yield return Ease.Animate(1, (a) =>
+            if (position != ActorPosition.OutLeft || position != ActorPosition.OutRight)
             {
-                float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
-                image.color = new Color(1f, 1f, 1f, lerp);
-            });
+               yield return Ease.Animate(1, (a) =>
+                {
+                    float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
+                    image.color = new Color(1f, 1f, 1f, lerp);
+                }); 
+            } else
+            {
+                image.color = new Color(1f, 1f, 1f, 1f);
+            }
+            
         }
 
         public IEnumerator MoveActor(
@@ -151,7 +158,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
 
             yield return Ease.Animate(duration, (a) =>
                 {
-                    float lerp = Ease.Get(1 - a, EaseFunction.Cubic, EaseMode.Out);
+                    float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
                     rect.anchoredPosition = Vector2.Lerp(start, end, lerp);
                 });
 
