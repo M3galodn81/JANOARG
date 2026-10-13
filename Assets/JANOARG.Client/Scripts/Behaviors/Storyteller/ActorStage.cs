@@ -100,9 +100,9 @@ namespace JANOARG.Client.Behaviors.Storyteller
             if (bringToFront)
                 image.transform.SetAsLastSibling();
 
-            if (position != ActorPosition.OutLeft || position != ActorPosition.OutRight)
+            if (position != ActorPosition.OutLeft && position != ActorPosition.OutRight)
             {
-               yield return Ease.Animate(1, (a) =>
+               yield return Ease.Animate(1f, (a) =>
                 {
                     float lerp = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
                     image.color = new Color(1f, 1f, 1f, lerp);
@@ -123,7 +123,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
             if (!_Actors.TryGetValue(alias, out Image image))
             {
                 Debug.LogWarning($"Actor is not on stage: {alias}");
-                yield return null;
+                yield break;
             }
 
             StopMovement(alias);
