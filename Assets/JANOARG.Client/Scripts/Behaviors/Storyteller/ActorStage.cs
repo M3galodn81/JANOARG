@@ -316,8 +316,30 @@ namespace JANOARG.Client.Behaviors.Storyteller
                 CanvasGroup.alpha = Mathf.Lerp(from, to, lerp);
             });
         }
+
+        public IEnumerator Flip(string alias, float duration = 0.25f)
+        {
+            if (!_Actors.TryGetValue(alias, out Image image))
+                yield break;
+
+            RectTransform rect = image.rectTransform;
+
+            float startX = rect.localScale.x;
+            float endX = startX >= 0f ? -Mathf.Abs(startX) : Mathf.Abs(startX);
+
+            yield return Ease.Animate(duration, a =>
+            {
+                if (rect == null) return;
+
+                float t = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
+                Vector3 scale = rect.localScale;
+                scale.x = Mathf.Lerp(startX, endX, t);
+                rect.localScale = scale;
+            });
+        }
+
     }
-    
+
     public enum ActorPosition
     {
         Left,
