@@ -841,6 +841,8 @@ MonoBehaviour:
   _RightPoint: {fileID: 1645227049}
   _OutLeftPoint: {fileID: 1136871064}
   _OutRightPoint: {fileID: 1347405398}
+  _ActorSpacing: 150
+  _RearrangeDuration: 0.35
 --- !u!1 &1266978310
 GameObject:
   m_ObjectHideFlags: 0
@@ -2037,7 +2039,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6391826254ae16b398dac6dafeb7a772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScriptToPlay: {fileID: 5022602860645237092, guid: 378d56d9355aa71dd9862ceec1886561, type: 3}
+  ScriptToPlay: {fileID: 0}
 --- !u!1 &1571401274
 GameObject:
   m_ObjectHideFlags: 0
