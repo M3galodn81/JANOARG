@@ -140,13 +140,13 @@ namespace JANOARG.Client.Behaviors.Storyteller
                 DialogueLabel.rectTransform.anchoredPosition = dialoguePos + EaseUtils.FromZero(5, x, EaseFunction.Cubic, EaseMode.In) * Vector2.down;
             });
 
-            // Reset Dialog Label
+            // Reset Dialog Label and Name Label
             SetNameLabelText("");
             DialogueLabel.text = "";
             DialogueLabel.color = Color.white;
             DialogueLabel.rectTransform.anchoredPosition = dialoguePos;
             
-            // Setting up Text
+            // Prefilling the labels
             foreach (StoryInstruction instruction in chunk.Instructions)
                 instruction.OnTextBuild(this);
 
@@ -169,31 +169,25 @@ namespace JANOARG.Client.Behaviors.Storyteller
                 yield return UndockInterface();
             }
 
-            // Scene Instructions
-            foreach (StoryInstruction ins in chunk.Instructions)
-            {
-                IEnumerator crt = ins.OnSceneSet(this);
-                if (crt != null) yield return crt;
-            }
-
-            // Character Instructions
-            foreach (StoryInstruction instruction in chunk.Instructions)
-            {
-                IEnumerator chunkRoutine = instruction.OnActorAction(this);
-                if (chunkRoutine != null) yield return chunkRoutine;
-            }
-
-            // Text Instructions
-            foreach (StoryInstruction instruction in chunk.Instructions)
-            {
-                IEnumerator chunkRoutine = instruction.OnTextReveal(this);
-                if (chunkRoutine != null) yield return chunkRoutine;
-            }
+            // Order
+            yield return RunPhase(chunk, i => i.OnSceneSet(this));
+            yield return RunPhase(chunk, i => i.OnBeforeTextReveal(this));
+            yield return RunPhase(chunk, i => i.OnTextReveal(this));
+            yield return RunPhase(chunk, i => i.OnAfterTextReveal(this));
 
             yield return new WaitWhile(() => ActiveCoroutines > 0);
 
             _IsPlaying = false;
             SetNextChunkIndicatorState(1);
+        }
+
+        private IEnumerator RunPhase(StoryChunk chunk, Func<StoryInstruction, IEnumerator> hook)
+        {
+            foreach (StoryInstruction ins in chunk.Instructions)
+            {
+                IEnumerator routine = hook(ins);
+                if (routine != null) yield return routine;
+            }
         }
 
         public void ResetDialogueMesh()

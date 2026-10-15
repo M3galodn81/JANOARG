@@ -32,7 +32,7 @@ namespace JANOARG.Client.Data.Story.Instructions
             }
         }
 
-        public override IEnumerator OnActorAction(Storyteller teller)
+        public override IEnumerator OnBeforeTextReveal(Storyteller teller)
         {
             yield return teller.ActorStage.MoveActor(Alias,Destination,Duration);
         }
