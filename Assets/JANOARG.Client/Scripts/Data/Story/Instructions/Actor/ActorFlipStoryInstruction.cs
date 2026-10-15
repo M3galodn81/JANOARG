@@ -10,7 +10,6 @@ namespace JANOARG.Client.Data.Story.Instructions
     public class ActorFlipStoryInstruction : StoryInstruction
     {
         public string Alias;
-        public ActorPosition Destination;
 
         [StoryTag("ActorFlip")]
         public ActorFlipStoryInstruction(string id)

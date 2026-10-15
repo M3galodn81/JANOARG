@@ -536,7 +536,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.2}
   m_AnchoredPosition: {x: 0, y: -540}
-  m_SizeDelta: {x: 880, y: 144}
+  m_SizeDelta: {x: 880, y: 140}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1020738988
 MonoBehaviour:
@@ -1324,6 +1324,7 @@ MonoBehaviour:
   CurrentScript: {fileID: 0}
   CurrentChunkIndex: 0
   CurrentCharacterIndex: 0
+  Interface: {fileID: 1020738987}
   DialogueLabel: {fileID: 1865017652}
   NameLabel: {fileID: 1266978314}
   NameLabelHolder: {fileID: 1470953560}
@@ -2039,7 +2040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6391826254ae16b398dac6dafeb7a772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScriptToPlay: {fileID: 0}
+  ScriptToPlay: {fileID: 5022602860645237092, guid: e8d13fd44a928a84fb2882d6823c2dcc, type: 3}
 --- !u!1 &1571401274
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,6 +25,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
         public int CurrentCharacterIndex;
 
         [Space]
+        public RectTransform Interface;
         public TMP_Text DialogueLabel;
 
         public TMP_Text      NameLabel;
@@ -140,12 +141,12 @@ namespace JANOARG.Client.Behaviors.Storyteller
             });
 
             // Reset Dialog Label
+            SetNameLabelText("");
             DialogueLabel.text = "";
             DialogueLabel.color = Color.white;
             DialogueLabel.rectTransform.anchoredPosition = dialoguePos;
-            SetNameLabelText("");
-
-            // Setting up Scene
+            
+            // Setting up Text
             foreach (StoryInstruction instruction in chunk.Instructions)
                 instruction.OnTextBuild(this);
 
@@ -156,6 +157,17 @@ namespace JANOARG.Client.Behaviors.Storyteller
             CurrentRevealEffect = new FloatInTypeEffect();
             IsMeshDirty = true;
             ResetDialogueMesh();
+
+            Debug.Log($"Dialog: {NameLabel.text} : {DialogueLabel.text}");
+            // If DialogLabel and NameLabel is empty, dock the textbox
+            if (string.IsNullOrEmpty(NameLabel.text) && string.IsNullOrEmpty(DialogueLabel.text))
+            {
+                yield return DockInterface();
+            }
+            else
+            {
+                yield return UndockInterface();
+            }
 
             // Scene Instructions
             foreach (StoryInstruction ins in chunk.Instructions)
@@ -170,7 +182,7 @@ namespace JANOARG.Client.Behaviors.Storyteller
                 IEnumerator chunkRoutine = instruction.OnActorAction(this);
                 if (chunkRoutine != null) yield return chunkRoutine;
             }
-            
+
             // Text Instructions
             foreach (StoryInstruction instruction in chunk.Instructions)
             {
@@ -251,12 +263,13 @@ namespace JANOARG.Client.Behaviors.Storyteller
         public void SetNameLabelText(string label)
         {
             _CurrentNameFieldRoutine?.Skip();
-
+            NameLabel.text = "";
             float fromAlpha = NameLabelGroup.alpha;
             float toAlpha = string.IsNullOrWhiteSpace(label) ? 0 : 1;
             float fromXPos = NameLabelHolder.anchorMin.x;
             float toXPos = 0;
 
+            // Reveal / Persist
             if (toAlpha > 0)
             {
                 NameLabel.text = label;
@@ -276,9 +289,37 @@ namespace JANOARG.Client.Behaviors.Storyteller
             StartCoroutine(_CurrentNameFieldRoutine);
         }
     
-        public void GetBackground()
+        public IEnumerator DockInterface()
         {
+            Vector2 start = Interface.offsetMax;
+            Vector2 end = start;
+            end.y = -490f;
+
+            if (Interface.offsetMax.y == end.y) yield break;
+            yield return Ease.Animate(0.5f, a =>
+            {
+                float ease = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
+                Interface.offsetMax = Vector2.Lerp(start, end, ease);
+            });
+        }
+
+        public IEnumerator UndockInterface()
+        {
+            Vector2 start = Interface.offsetMax;
+            Vector2 end = start;
+            end.y = -400f;
             
+            if (Interface.offsetMax.y == end.y) yield break;
+            yield return Ease.Animate(0.5f, a =>
+            {
+                float ease = Ease.Get(a, EaseFunction.Cubic, EaseMode.Out);
+                Interface.offsetMax = Vector2.Lerp(start, end, ease);
+
+                // To make text is still invis when animating and make the text anim not break 
+                // idk why this works :sob:
+                DialogueLabel.ForceMeshUpdate();
+                ResetDialogueMesh();
+            });
         }
     
     }
