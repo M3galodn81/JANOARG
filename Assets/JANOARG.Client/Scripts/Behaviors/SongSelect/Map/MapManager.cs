@@ -6,11 +6,11 @@ using JANOARG.Client.Behaviors.Common;
 using JANOARG.Client.Behaviors.SongSelect.List.ListItemUIs;
 using JANOARG.Client.Behaviors.SongSelect.Map.MapItems;
 using JANOARG.Client.Behaviors.SongSelect.Map.MapItemUIs;
+using JANOARG.Client.Behaviors.Storyteller;
 using JANOARG.Client.Data.Playlist;
 using JANOARG.Shared.Data.ChartInfo;
 using JANOARG.Shared.Utils.Animation;
 using JANOARG.Shared.Utils;
-using JANOARG.Client.Behaviors.Storyteller;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -357,14 +357,28 @@ namespace JANOARG.Client.Behaviors.SongSelect.Map
             SongSelectScreen.sMain.TargetSongAnim = StartCoroutine(SongSelectScreen.sMain.MapTargetSongShowAnim(item));
         }
 
-        public void LoadStory(StoryMapItem item)
+        public IEnumerator LoadStory(StoryMapItem item)
         {
             isPointerDown = false;
-            Debug.Log($"{item.TargetStory.name}");
-            // SceneManager.LoadScene("Storyteller");
-            CommonSys.Load("Storyteller", null, null,showBar: false);
-            // StorytellerScreen.sMain.ScriptToPlay = ;
-            Storyteller.Storyteller.sMain.PlayScript(item.TargetStory);
+            Debug.Log($"{item.TargetStory.name} is Target Story");
+
+            yield return new WaitForSeconds(1);
+            LoadingBar.sMain.Show();
+
+            CommonSys.sMain.MainCamera.backgroundColor = Color.black;
+
+            StorytellerScreen.sScriptToPlay = item.TargetStory;
+            CommonSys.Load(
+                "Storyteller",
+                () => !LoadingBar.sMain.IsAnimating && Storyteller.StorytellerScreen.sMain?.IsInit == true,
+                () => {
+                    LoadingBar.sMain.Hide();
+                    Storyteller.Storyteller.sMain.PlayScript(StorytellerScreen.sScriptToPlay);
+                    }
+                , false);
+            SceneManager.UnloadSceneAsync(MapScene);
+            SceneManager.UnloadSceneAsync("Song Select");
+            Resources.UnloadUnusedAssets();
         }
     }
 }

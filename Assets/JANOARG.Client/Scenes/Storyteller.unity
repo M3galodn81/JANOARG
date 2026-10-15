@@ -1639,7 +1639,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2040,7 +2040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6391826254ae16b398dac6dafeb7a772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScriptToPlay: {fileID: 5022602860645237092, guid: e8d13fd44a928a84fb2882d6823c2dcc, type: 3}
+  ScriptToPlay: {fileID: 0}
 --- !u!1 &1571401274
 GameObject:
   m_ObjectHideFlags: 0

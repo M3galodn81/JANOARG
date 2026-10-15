@@ -1,6 +1,8 @@
+using System.Collections;
 using JANOARG.Client.Behaviors.Common;
 using JANOARG.Client.Data.Story;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace JANOARG.Client.Behaviors.Storyteller
 {
@@ -8,7 +10,8 @@ namespace JANOARG.Client.Behaviors.Storyteller
     {
         public static StorytellerScreen sMain;
 
-        public StoryScript ScriptToPlay;
+        public static StoryScript sScriptToPlay;
+        public bool IsInit;
 
         public void Awake()
         {
@@ -19,12 +22,20 @@ namespace JANOARG.Client.Behaviors.Storyteller
         // Start is called before the first frame update
         private void Start()
         {
-            if (ScriptToPlay) Storyteller.sMain.PlayScript(ScriptToPlay);
+            StartCoroutine(StoryRoutine());
         }
 
-        // Update is called once per frame
-        private void Update()
+        
+        public IEnumerator StoryRoutine()
         {
+            if (sScriptToPlay)
+            {
+                IsInit = true;
+                Storyteller.sMain.CurrentScript = sScriptToPlay;
+            } else
+            {
+                yield break;   
+            }
         }
     }
 }

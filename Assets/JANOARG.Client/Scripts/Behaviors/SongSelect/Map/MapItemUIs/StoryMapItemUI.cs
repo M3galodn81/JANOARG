@@ -40,7 +40,7 @@ namespace JANOARG.Client.Behaviors.SongSelect.Map.MapItemUIs
 
         public void OnClick()
         {
-            MapManager.sMain.LoadStory(parent);
+            StartCoroutine(MapManager.sMain.LoadStory(parent));
         }
     }
 }
