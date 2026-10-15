@@ -103,7 +103,20 @@ namespace JANOARG.Client.Data.Files
                 }
 
                 // MusicSet :: MusicID
-                if (line.StartsWith("#")) continue;
+                if (line.StartsWith("MusicSet"))
+                {
+                    Debug.Log($"Line {line} in MusicSet");
+                    Match match;
+                    Regex separator = new(@"(?<action>.+?)\s*::\s*(?<content>.+)");
+                    if ((match = separator.Match(line)).Success)
+                    {
+                        MusicSetStoryInstruction musicSetIns =
+                         new MusicSetStoryInstruction(match.Groups["content"].ToString());
+                        Debug.Log($"'{match.Groups["content"]}' is the Id");
+                        currentChunk.Instructions.Add(musicSetIns);
+                    }
+                    continue;
+                }
 
                 // PlaceSet :: Text
                 if (line.StartsWith("#")) continue;

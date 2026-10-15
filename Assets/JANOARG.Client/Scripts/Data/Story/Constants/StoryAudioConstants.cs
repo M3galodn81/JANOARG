@@ -12,6 +12,93 @@ namespace JANOARG.Client.Data.Constant
         public Music[] MusicList;
         public SoundEffects[] SFXList;
         public StoryAudioReference[] StoryAudios;
+
+        private Dictionary<string, AudioClip> _MusicLookup;
+        private Dictionary<string, AudioClip> _SoundLookup;
+
+        #region Music Lookup
+        public AudioClip GetMusic(string id)
+        {
+            if (_MusicLookup == null)
+                BuildList();
+
+            return _MusicLookup.TryGetValue(id, out AudioClip clip)
+                ? clip
+                : null;
+        }
+
+        public AudioClip GetSound(string id)
+        {
+            if (_SoundLookup == null)
+                BuildList();
+
+            return _SoundLookup.TryGetValue(id, out AudioClip clip)
+                ? clip
+                : null;
+        }
+
+        public void BuildList()
+        {
+            _MusicLookup = new Dictionary<string, AudioClip>();
+            _SoundLookup = new Dictionary<string, AudioClip>();
+            var visited = new HashSet<StoryAudioConstants>();
+            TraverseBackgrounds(this, visited);
+        }
+
+        private void TraverseBackgrounds(
+            StoryAudioConstants constants,
+            HashSet<StoryAudioConstants> visited)
+        {
+            if (constants == null || !visited.Add(constants))
+                return;
+
+            if (constants._MusicLookup != null)
+            {
+                foreach (Music music in constants.MusicList)
+                {
+                    if (music == null ||
+                        string.IsNullOrEmpty(music.ID))
+                        continue;
+
+                    if (!_MusicLookup.TryAdd(
+                            music.ID, music.MusicClip))
+                    {
+                        Debug.LogWarning(
+                            $"Duplicate background ID: {music.ID}",
+                            constants);
+                    }
+                }
+
+                foreach (SoundEffects sound in constants.SFXList)
+                {
+                    if (sound == null ||
+                        string.IsNullOrEmpty(sound.ID))
+                        continue;
+
+                    if (!_SoundLookup.TryAdd(
+                            sound.ID, sound.SoundEffect))
+                    {
+                        Debug.LogWarning(
+                            $"Duplicate background ID: {sound.ID}",
+                            constants);
+                    }
+                }
+            }
+
+            if (constants.MusicList == null && constants.SFXList == null)
+                return;
+
+            foreach (StoryAudioReference reference
+                    in constants.StoryAudios)
+            {
+                if (reference?.StoryAudio == null)
+                    continue;
+
+                TraverseBackgrounds(reference.StoryAudio, visited);
+            }
+        }
+    
+        #endregion
     }
 
     [Serializable]
